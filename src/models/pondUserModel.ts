@@ -4,17 +4,17 @@
 // declare global {
 //     namespace Express {
 //         interface User {
-            
+
 //         }
 //     }
 // }
 
 interface PondUser extends Express.User {
-    id: number;
-    username: string;
-    email: string;
-    googleId: string;
-    exp: number;
+  id: number;
+  username: string;
+  email: string;
+  googleId: string;
+  exp: number;
 }
 
 export default PondUser;

@@ -5,7 +5,7 @@ import passport from 'passport';
 import cookieSesson from 'cookie-session';
 import fishingSocket from './sockets/fishing';
 import authRouter from './routers/authentication';
-import { setupAuth } from './authSetup';
+import setupAuth from './authSetup';
 
 const app: Application = express();
 

@@ -26,7 +26,7 @@ const setupAuth = () => {
       },
       async (request, _accessToken, _refreshToken, profile, done) => {
         const pondUser = await pondUserController.getOrCreatePondUser(profile);
-        done(null, pondUser);
+        done(null, pondUser || undefined);
       }
     )
   );

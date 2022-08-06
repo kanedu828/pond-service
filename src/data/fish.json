@@ -1,0 +1,110 @@
+{
+  "common": [
+    {
+      "id": 1000,
+      "name": "Salmon",
+      "description": "",
+      "lengthRangeInCm": [22, 84],
+      "secondsFishable": 500,
+      "expRewarded": 10,
+      "rarity": "common"
+    },
+    {
+      "id": 1001,
+      "name": "Trout",
+      "description": "",
+      "lengthRangeInCm": [39, 140],
+      "secondsFishable": 500,
+      "expRewarded": 10,
+      "rarity": "common"
+    },
+    {
+      "id": 1003,
+      "name": "Carp",
+      "description": "",
+      "lengthRangeInCm": [27, 43],
+      "secondsFishable": 600,
+      "expRewarded": 7,
+      "rarity": "common"
+    },
+    {
+      "id": 1004,
+      "name": "Mackerel",
+      "description": "",
+      "lengthRangeInCm": [22, 38],
+      "secondsFishable": 600,
+      "expRewarded": 10,
+      "rarity": "common"
+    },
+
+    {
+      "id": 1005,
+      "name": "Catfish",
+      "description": "",
+      "lengthRangeInCm": [5, 450],
+      "secondsFishable": 400,
+      "expRewarded": 15,
+      "rarity": "common"
+    },
+    {
+      "id": 1006,
+      "name": "Goldfish",
+      "description": "",
+      "lengthRangeInCm": [5, 30],
+      "secondsFishable": 600,
+      "expRewarded": 6,
+      "rarity": "common"
+    }
+  ],
+  "rare": [
+    {
+      "id": 2001,
+      "name": "Swordfish",
+      "description": "",
+      "lengthRangeInCm": [250, 350],
+      "secondsFishable": 300,
+      "expRewarded": 20,
+      "rarity": "rare"
+    },
+    {
+      "id": 2002,
+      "name": "Eel",
+      "description": "",
+      "lengthRangeInCm": [10, 350],
+      "secondsFishable": 300,
+      "expRewarded": 20,
+      "rarity": "rare"
+    },
+    {
+      "id": 2003,
+      "name": "Blue Tang",
+      "description": "",
+      "lengthRangeInCm": [15, 35],
+      "secondsFishable": 400,
+      "expRewarded": 18,
+      "rarity": "rare"
+    }
+  ],
+  "epic": [
+    {
+      "id": 3001,
+      "name": "Tiger Shark",
+      "description": "",
+      "lengthRangeInCm": [325, 425],
+      "secondsFishable": 60,
+      "expRewarded": 70,
+      "rarity": "epic"
+    }
+  ],
+  "legendary": [
+    {
+      "id": 4001,
+      "name": "Whale Shark",
+      "description": "",
+      "lengthRangeInCm": [550, 1000],
+      "secondsFishable": 5,
+      "expRewarded": 1000,
+      "rarity": "legendary"
+    }
+  ]
+}

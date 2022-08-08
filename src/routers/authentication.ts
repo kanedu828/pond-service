@@ -1,7 +1,5 @@
 import { Router, Request, Response } from 'express';
 import passport from 'passport';
-import User from '../models/pondUserModel';
-import { isLoggedIn } from '../util';
 
 const router: any = Router();
 
@@ -13,13 +11,13 @@ router.get(
 router.get(
   '/google/callback',
   passport.authenticate('google', {
-    successRedirect: '/auth/good',
+    successRedirect: 'http://127.0.0.1:3000',
     failureRedirect: '/auth/failure',
   })
 );
 
 router.get('/failure', (_req: Request, res: Response) => {
-  res.send('Failure');
+  res.json({ authenticated: false });
 });
 
 router.get('/logout', (req: Request, res: Response) => {
@@ -32,9 +30,14 @@ router.get('/logout', (req: Request, res: Response) => {
   res.redirect('/');
 });
 
-router.get('/good', isLoggedIn, (req: Request, res: Response) => {
-  const pondUser = req.user as User;
-  res.json(pondUser);
+router.get('/good', (req: Request, res: Response) => {
+  if (req.user) {
+    console.log('True');
+    res.json({ authenticated: true });
+  } else {
+    console.log('false');
+    res.json({ authenticated: false });
+  }
 });
 
 export default router;

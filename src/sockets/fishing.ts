@@ -1,37 +1,36 @@
-import {
-  getRandomArrayElement,
-  getRandomInt,
-  getRandomRarity,
-  randomNormal,
-  sleep,
-} from '../util';
-import fishJson from '../data/fish.json';
-import { FishData } from '../data/fishTypes';
+
+import { FishingService } from '../service/fishingService';
+
+const fishingService = new FishingService();
 
 const fishingSocket = (io: any) => {
   io.on('connection', async (socket: any) => {
-    console.log(`${socket.id} has connected`);
+    const userId = socket.request.user.id;
 
+    const lastConnectedSocketId = fishingService.getLastConnnectedSocketId(userId, socket.id);
+    if (lastConnectedSocketId) {
+      io.sockets.sockets.get(lastConnectedSocketId)?.disconnect();
+    }
+
+    const currentFish = fishingService.getCurrentFish(userId);
+    if (currentFish) {
+      socket.emit('new-fish', currentFish);
+    }
+
+    console.log(`${socket.id} has connected`);
     socket.on('collect-fish', () => {
       console.log('Fished!');
     });
 
+    socket.on('collect-fish', () => {
+      const collectedFish = fishingService.collectFish(userId);
+    });
+
     while (true) {
-      const secondsUntilNextFish = getRandomInt(10, 30);
-      const rarity = getRandomRarity();
-      const fishCollection = fishJson as FishData;
-      const fish = getRandomArrayElement(
-        fishCollection[rarity as keyof FishData]
-      );
-      const length = Math.floor(
-        randomNormal(fish.lengthRangeInCm[0], fish.lengthRangeInCm[1])
-      );
-      await sleep(secondsUntilNextFish * 1000);
-      const data = {
-        ...fish,
-        length,
-      };
-      socket.emit('new-fish', data);
+      const fishInstance = await fishingService.getFish(userId, 10, 30);
+      if (fishInstance) {
+        socket.emit('new-fish', fishInstance); 
+      }
     }
   });
 };

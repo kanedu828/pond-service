@@ -3,6 +3,7 @@ import { Profile } from 'passport-google-oauth20';
 import PondUserService from '../service/pondUserService';
 
 class PondUserController {
+  
   pondUserService: PondUserService;
 
   constructor(pondUserService: PondUserService) {

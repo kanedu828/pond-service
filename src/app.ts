@@ -2,17 +2,17 @@ import express, { Application } from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import passport from 'passport';
-import cookieSesson from 'cookie-session';
 import cors from 'cors';
 import fishingSocket from './sockets/fishing';
 import authRouter from './routers/authentication';
 import setupAuth from './authSetup';
+import { isLoggedIn} from './middleware';
+import cookieSession from 'cookie-session';
+import knex from 'knex';
+import PondUserDao from './dao/pondUserDao';
+import PondUserService from './service/pondUserService';
+import PondUserController from './controller/pondUserController';
 
-const corsConfig: any = {
-  cors: {
-    origin: ['http://127.0.0.1:3000'],
-  },
-};
 
 const app: Application = express();
 
@@ -23,28 +23,47 @@ app.use(
   })
 );
 
-// TODO: Read docs and configure
-const session = cookieSesson({
+const sessionMiddleware = cookieSession({
   name: 'pond-session',
-  keys: ['key1', 'key2'],
-});
+  keys: ['key1', 'key2']
+})
 
-app.use(session);
+// App middleware
+app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
 
-setupAuth();
+
+//-------DB, DAO, Service, and Controller Initialization-------
+const db = knex({
+  client: 'pg',
+  connection: process.env.PSQL_CONNECTION_STRING,
+});
+
+const pondUserDao = new PondUserDao(db);
+const pondUserService = new PondUserService(pondUserDao);
+const pondUserController = new PondUserController(pondUserService);
+// ------------------------------------------------------------
+
+
+setupAuth(pondUserController);
 
 const server = http.createServer(app);
-const io = new Server(server, corsConfig);
+const io = new Server(server, {
+  cors: {
+    origin: ['http://127.0.0.1:3000'],
+    credentials: true,
+  }
+});
 
+// Socket io middleware
 const wrap = (middleware: any) => (socket: any, next: any) =>
   middleware(socket.request, {}, next);
 
-io.use(wrap(session));
+io.use(wrap(sessionMiddleware));
 io.use(wrap(passport.initialize()));
 io.use(wrap(passport.session()));
-// io.use(isLoggedInSocket);
+io.use(wrap(isLoggedIn));
 
 fishingSocket(io);
 

@@ -1,9 +1,9 @@
 import { Strategy } from 'passport-google-oauth20';
 import passport from 'passport';
-import { pondUserController } from './context';
 import PondUser from './models/pondUserModel';
+import PondUserController from './controller/pondUserController';
 
-const setupAuth = () => {
+const setupAuth = (pondUserController: PondUserController) => {
   // user is type any because I am getting "User does not have id property"
   // when declared as Express.User
   passport.serializeUser((user, done) => {

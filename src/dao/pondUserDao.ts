@@ -1,3 +1,8 @@
+interface UpdatePondUserRequestType {
+  id: number,
+  username: string
+}
+
 class PondUserDao {
   // Knex db instance
   db: any;
@@ -11,7 +16,7 @@ class PondUserDao {
       .where({
         id,
       })
-      .first('id', 'google_id', 'username', 'email', 'exp');
+      .first('id', 'google_id', 'username', 'email');
     return pondUser;
   }
 
@@ -20,32 +25,31 @@ class PondUserDao {
       .where({
         google_id: googleId,
       })
-      .first('id', 'google_id', 'username', 'email', 'exp');
+      .first('id', 'google_id', 'username', 'email');
     return pondUser;
   }
 
-  async insertPondUser(email: string, googleId: string) {
+  async insertPondUser(email: string, googleId: string, username: string) {
     const pondUser = await this.db('pond_user')
+      .returning(['id', 'email', 'google_id', 'username'])
       .insert({
         email,
         google_id: googleId,
-        username: '',
-      })
-      .returning(['id', 'email', 'google_id', 'username']);
-    return pondUser;
+        username,
+      });
+    return pondUser[0];
   }
 
-  async updatePondUser(columns: any) {
+  async updatePondUser(columns: UpdatePondUserRequestType) {
     const pondUser = await this.db('pond_user')
+      .returning(['id', 'email', 'google_id', 'username'])
       .where({
         id: columns.id,
       })
       .update({
         username: columns.username,
-        exp: columns.exp,
-      })
-      .returning(['id', 'email', 'google_id', 'username']);
-    return pondUser;
+      });
+    return pondUser[0];
   }
 }
 

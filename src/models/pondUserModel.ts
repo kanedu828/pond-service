@@ -14,6 +14,8 @@ interface PondUser extends Express.User {
   username: string;
   email: string;
   googleId: string;
+  location: string;
+  exp: number;
 }
 
 export default PondUser;

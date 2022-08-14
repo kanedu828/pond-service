@@ -5,6 +5,7 @@ export interface Fish {
   lengthRangeInCm: number[];
   expRewarded: number;
   rarity: string;
+  secondsFishable: number;
 }
 
 export interface FishData {

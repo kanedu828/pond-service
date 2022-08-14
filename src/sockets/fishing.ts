@@ -1,18 +1,18 @@
+import FishingController from '../controller/fishingController';
 
-import { FishingService } from '../service/fishingService';
-
-const fishingService = new FishingService();
-
-const fishingSocket = (io: any) => {
+const fishingSocket = (io: any, fishingController: FishingController) => {
   io.on('connection', async (socket: any) => {
     const userId = socket.request.user.id;
 
-    const lastConnectedSocketId = fishingService.getLastConnnectedSocketId(userId, socket.id);
+    const lastConnectedSocketId = fishingController.getLastConnectedSocketId(
+      userId,
+      socket.id
+    );
     if (lastConnectedSocketId) {
       io.sockets.sockets.get(lastConnectedSocketId)?.disconnect();
     }
 
-    const currentFish = fishingService.getCurrentFish(userId);
+    const currentFish = fishingController.getCurrentFish(userId);
     if (currentFish) {
       socket.emit('new-fish', currentFish);
     }
@@ -23,13 +23,13 @@ const fishingSocket = (io: any) => {
     });
 
     socket.on('collect-fish', () => {
-      const collectedFish = fishingService.collectFish(userId);
+      const collectedFish = fishingController.collectFish(userId);
     });
 
     while (true) {
-      const fishInstance = await fishingService.getFish(userId, 10, 30);
+      const fishInstance = await fishingController.getFish(userId, 10, 30);
       if (fishInstance) {
-        socket.emit('new-fish', fishInstance); 
+        socket.emit('new-fish', fishInstance);
       }
     }
   });

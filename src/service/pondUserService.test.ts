@@ -5,46 +5,63 @@ const mockUser = {
   id: 123,
   username: 'test-user',
   email: 'test@example.com',
-  googleId: 'my-google-id',
-  exp: 0,
+  google_id: 'my-google-id',
+  exp: 1,
+  location: 'default'
 };
 
 jest.mock('../dao/pondUserDao');
 
 const mockPondUserDao: jest.Mocked<PondUserDao> = {
   db: jest.fn(),
-  getPondUserById: jest.fn(),
-  getPondUserByGoogleId: jest.fn(),
+  getPondUser: jest.fn(),
   insertPondUser: jest.fn(),
   updatePondUser: jest.fn(),
+  incrementPondUserExp: jest.fn()
 };
 
 const pondUserService = new PondUserService(mockPondUserDao);
 
 test('Test getPondUser when id exists', async () => {
-  mockPondUserDao.getPondUserById.mockResolvedValueOnce(mockUser);
+  mockPondUserDao.getPondUser.mockResolvedValueOnce(mockUser);
   const results = await pondUserService.getPondUser(123);
   expect(results).toBe(mockUser);
 });
 
 test('Test getOrCreatePondUser when id exists', async () => {
-  mockPondUserDao.getPondUserByGoogleId.mockResolvedValueOnce(mockUser);
+  const expectedUser = {
+    id: 123,
+    username: 'test-user',
+    email: 'test@example.com',
+    googleId: 'my-google-id',
+    exp: 1,
+    location: 'default'
+  };
+  mockPondUserDao.getPondUser.mockResolvedValueOnce(mockUser);
   mockPondUserDao.insertPondUser.mockResolvedValueOnce(mockUser);
   const results = await pondUserService.getOrCreatePondUser(
     'my-google-id',
     'test@example.com'
   );
-  expect(results).toBe(mockUser);
+  expect(results).toStrictEqual(expectedUser);
   expect(mockPondUserDao.insertPondUser).toHaveBeenCalledTimes(0);
 });
 
 test('Test getOrCreatePondUser when id does not exist', async () => {
-  mockPondUserDao.getPondUserByGoogleId.mockResolvedValueOnce(null);
+  const expectedUser = {
+    id: 123,
+    username: 'test-user',
+    email: 'test@example.com',
+    googleId: 'my-google-id',
+    exp: 1,
+    location: 'default'
+  };
+  mockPondUserDao.getPondUser.mockResolvedValueOnce(null);
   mockPondUserDao.insertPondUser.mockResolvedValueOnce(mockUser);
   const results = await pondUserService.getOrCreatePondUser(
     'my-google-id',
     'test@example.com'
   );
-  expect(results).toBe(mockUser);
+  expect(results).toStrictEqual(expectedUser);
   expect(mockPondUserDao.insertPondUser).toHaveBeenCalledTimes(1);
 });

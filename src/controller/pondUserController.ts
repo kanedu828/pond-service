@@ -1,13 +1,14 @@
 import { Request, Response } from 'express';
 import { Profile } from 'passport-google-oauth20';
+import PondUserDao from '../dao/pondUserDao';
 import PondUserService from '../service/pondUserService';
 
 class PondUserController {
-  
   pondUserService: PondUserService;
 
-  constructor(pondUserService: PondUserService) {
-    this.pondUserService = pondUserService;
+  constructor(db: any) {
+    const pondUserDao = new PondUserDao(db);
+    this.pondUserService = new PondUserService(pondUserDao);
   }
 
   /**

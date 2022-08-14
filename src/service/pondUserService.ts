@@ -1,7 +1,6 @@
-import PondUserDao from '../dao/pondUserDao';
 import { randomBytes } from 'crypto';
+import PondUserDao from '../dao/pondUserDao';
 import PondUser from '../models/pondUserModel';
-
 
 class PondUserService {
   pondUserDao: PondUserDao;
@@ -22,17 +21,27 @@ class PondUserService {
     googleId: string,
     email: string
   ): Promise<Express.User> {
-    let result = await this.pondUserDao.getPondUserByGoogleId(googleId);
+    let result = await this.pondUserDao.getPondUser({
+      google_id: googleId
+    });
     if (!result) {
-      const randomUsername = 'guest-' + randomBytes(48).toString('hex');
-      result = await this.pondUserDao.insertPondUser(email, googleId, randomUsername);
+      const randomUsername = `guest-${randomBytes(48).toString('hex')}`;
+      result = await this.pondUserDao.insertPondUser(
+        {
+          email,
+          google_id: googleId,
+          username: randomUsername
+        }
+      );
     }
     const pondUser: PondUser = {
       id: result.id,
       username: result.username,
       email: result.email,
-      googleId: result.google_id
-    }
+      googleId: result.google_id,
+      exp: result.exp,
+      location: result.location
+    };
     return pondUser;
   }
 
@@ -43,7 +52,7 @@ class PondUserService {
    * @returns A pond user
    */
   async getPondUser(id: number): Promise<Express.User> {
-    const result = await this.pondUserDao.getPondUserById(id);
+    const result = await this.pondUserDao.getPondUser({ id });
     return result;
   }
 }

@@ -1,54 +1,54 @@
-interface UpdatePondUserRequestType {
-  id: number,
-  username: string
+interface PondUserColumns {
+  id?: number,
+  email?: string,
+  google_id?: string,
+  username?: string,
+  exp?: number,
+  location?: string
 }
+
+const allColumns = ['id', 'email', 'google_id', 'username', 'exp', 'location'];
 
 class PondUserDao {
   // Knex db instance
   db: any;
-
+  
   constructor(db: any) {
     this.db = db;
   }
 
-  async getPondUserById(id: number) {
+  async getPondUser(key: PondUserColumns) {
     const pondUser = await this.db('pond_user')
-      .where({
-        id,
-      })
-      .first('id', 'google_id', 'username', 'email');
+      .where(key)
+      .first();
     return pondUser;
   }
 
-  async getPondUserByGoogleId(googleId: string) {
+  async insertPondUser(columns: PondUserColumns) {
     const pondUser = await this.db('pond_user')
-      .where({
-        google_id: googleId,
-      })
-      .first('id', 'google_id', 'username', 'email');
-    return pondUser;
+      .returning(allColumns)
+      .insert(columns);
+    return pondUser[0];
   }
 
-  async insertPondUser(email: string, googleId: string, username: string) {
+  async updatePondUser(key: PondUserColumns, columns: PondUserColumns) {
     const pondUser = await this.db('pond_user')
-      .returning(['id', 'email', 'google_id', 'username'])
-      .insert({
-        email,
-        google_id: googleId,
-        username,
+      .returning(allColumns)
+      .where(key)
+      .update({
+        username: columns.username,
+        location: columns.location
       });
     return pondUser[0];
   }
 
-  async updatePondUser(columns: UpdatePondUserRequestType) {
+  async incrementPondUserExp(id: number, inc: number) {
     const pondUser = await this.db('pond_user')
-      .returning(['id', 'email', 'google_id', 'username'])
-      .where({
-        id: columns.id,
-      })
-      .update({
-        username: columns.username,
-      });
+        .where({
+            id
+        })
+        .increment('exp', inc)
+        .returning(allColumns);
     return pondUser[0];
   }
 }

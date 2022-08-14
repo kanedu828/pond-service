@@ -6,8 +6,7 @@ import PondUserService from '../service/pondUserService';
 class PondUserController {
   pondUserService: PondUserService;
 
-  constructor(db: any) {
-    const pondUserDao = new PondUserDao(db);
+  constructor(pondUserDao: PondUserDao) {
     this.pondUserService = new PondUserService(pondUserDao);
   }
 

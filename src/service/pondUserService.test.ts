@@ -7,7 +7,7 @@ const mockUser = {
   email: 'test@example.com',
   google_id: 'my-google-id',
   exp: 1,
-  location: 'default'
+  location: 'default',
 };
 
 jest.mock('../dao/pondUserDao');
@@ -17,7 +17,7 @@ const mockPondUserDao: jest.Mocked<PondUserDao> = {
   getPondUser: jest.fn(),
   insertPondUser: jest.fn(),
   updatePondUser: jest.fn(),
-  incrementPondUserExp: jest.fn()
+  incrementPondUserExp: jest.fn(),
 };
 
 const pondUserService = new PondUserService(mockPondUserDao);
@@ -35,7 +35,7 @@ test('Test getOrCreatePondUser when id exists', async () => {
     email: 'test@example.com',
     googleId: 'my-google-id',
     exp: 1,
-    location: 'default'
+    location: 'default',
   };
   mockPondUserDao.getPondUser.mockResolvedValueOnce(mockUser);
   mockPondUserDao.insertPondUser.mockResolvedValueOnce(mockUser);
@@ -54,7 +54,7 @@ test('Test getOrCreatePondUser when id does not exist', async () => {
     email: 'test@example.com',
     googleId: 'my-google-id',
     exp: 1,
-    location: 'default'
+    location: 'default',
   };
   mockPondUserDao.getPondUser.mockResolvedValueOnce(null);
   mockPondUserDao.insertPondUser.mockResolvedValueOnce(mockUser);

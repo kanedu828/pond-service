@@ -1,10 +1,10 @@
 interface PondUserColumns {
-  id?: number,
-  email?: string,
-  google_id?: string,
-  username?: string,
-  exp?: number,
-  location?: string
+  id?: number;
+  email?: string;
+  google_id?: string;
+  username?: string;
+  exp?: number;
+  location?: string;
 }
 
 const allColumns = ['id', 'email', 'google_id', 'username', 'exp', 'location'];
@@ -12,15 +12,13 @@ const allColumns = ['id', 'email', 'google_id', 'username', 'exp', 'location'];
 class PondUserDao {
   // Knex db instance
   db: any;
-  
+
   constructor(db: any) {
     this.db = db;
   }
 
   async getPondUser(key: PondUserColumns) {
-    const pondUser = await this.db('pond_user')
-      .where(key)
-      .first();
+    const pondUser = await this.db('pond_user').where(key).first();
     return pondUser;
   }
 
@@ -37,18 +35,18 @@ class PondUserDao {
       .where(key)
       .update({
         username: columns.username,
-        location: columns.location
+        location: columns.location,
       });
     return pondUser[0];
   }
 
   async incrementPondUserExp(id: number, inc: number) {
     const pondUser = await this.db('pond_user')
-        .where({
-            id
-        })
-        .increment('exp', inc)
-        .returning(allColumns);
+      .where({
+        id,
+      })
+      .increment('exp', inc)
+      .returning(allColumns);
     return pondUser[0];
   }
 }

@@ -11,6 +11,7 @@ import setupAuth from './authSetup';
 import { isLoggedIn } from './middleware';
 import PondUserController from './controller/pondUserController';
 import FishingController from './controller/fishingController';
+import PondUserDao from './dao/pondUserDao';
 
 const app: Application = express();
 
@@ -37,7 +38,8 @@ const db = knex({
   connection: process.env.PSQL_CONNECTION_STRING,
 });
 
-const pondUserController = new PondUserController(db);
+const pondUserDao = new PondUserDao(db);
+const pondUserController = new PondUserController(pondUserDao);
 const fishingController = new FishingController();
 // ------------------------------------------------------------
 

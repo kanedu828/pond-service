@@ -43,8 +43,5 @@ test('validate fish json data', () => {
 
     fishSet.add(element.id);
   };
-  fishJson.common.forEach(validateFish);
-  fishJson.rare.forEach(validateFish);
-  fishJson.epic.forEach(validateFish);
-  fishJson.legendary.forEach(validateFish);
+  fishJson.ponds.forEach((pond) => pond.fish.forEach(validateFish));
 });

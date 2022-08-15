@@ -22,8 +22,9 @@ const fishingSocket = (io: any, fishingController: FishingController) => {
       console.log('Fished!');
     });
 
-    socket.on('collect-fish', () => {
-      const collectedFish = fishingController.collectFish(userId);
+    socket.on('collect-fish', async () => {
+      const collectedFish = await fishingController.collectFish(userId);
+      socket.emit('caught-fish', collectedFish);
     });
 
     while (true) {

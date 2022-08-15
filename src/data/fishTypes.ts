@@ -8,9 +8,12 @@ export interface Fish {
   secondsFishable: number;
 }
 
-export interface FishData {
-  common: Fish[];
-  rare: Fish[];
-  epic: Fish[];
-  legendary: Fish[];
+export interface Pond {
+  name: string,
+  requiredLevel: number,
+  fish: Fish[]
+}
+
+export interface FishCollection {
+  pond: Pond
 }

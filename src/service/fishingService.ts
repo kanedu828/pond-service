@@ -1,4 +1,4 @@
-import { Fish, FishData } from '../data/fishTypes';
+import { Fish } from '../data/fishTypes';
 import {
   getRandomArrayElement,
   getRandomInt,
@@ -7,11 +7,34 @@ import {
   sleep,
 } from '../util';
 import fishJson from '../data/fish.json';
+import PondUserDao from '../dao/pondUserDao';
+import FishDao from '../dao/fishDao';
+
+interface FishInstance {
+  id: number;
+  name: string;
+  description: string;
+  lengthRangeInCm: number[];
+  expRewarded: number;
+  rarity: string;
+  secondsFishable: number;
+  length: number,
+  expirationDate: number,
+};
+
 
 export default class FishingService {
-  userCurrentFish = new Map();
+  userCurrentFish = new Map<number, FishInstance>();
 
-  connectedUsers = new Map();
+  connectedUsers = new Map<number, number>();
+
+  pondUserDao: PondUserDao;
+  fishDao: FishDao;
+
+  constructor(pondUserDao: PondUserDao, fishDao: FishDao) {
+    this.pondUserDao = pondUserDao
+    this.fishDao = fishDao;
+  }
 
   /**
    *
@@ -24,17 +47,31 @@ export default class FishingService {
     const secondsUntilNextFish = getRandomInt(low, high);
     await sleep(secondsUntilNextFish * 1000);
     if (!this.getCurrentFish(userId)) {
+      const user = await this.pondUserDao.getPondUser({
+        id: userId
+      });
+      let location = user.location  
+
+      if (!(location in fishJson)) {
+        // If user does not have a valid location, reset to the deafult location
+        this.pondUserDao.updatePondUser({ id: userId }, { location: 'Pond' });
+        location = 'Pond';
+      }
+
+      const pond = fishJson.ponds.find((element) => element.name === location);
+
       const rarity = getRandomRarity();
-      const fishCollection = fishJson as FishData;
+      const fishOfRarity = pond?.fish.filter((element) => element.rarity === rarity);
       const fish: Fish = getRandomArrayElement(
-        fishCollection[rarity as keyof FishData]
+        fishOfRarity || []
       );
+
       const length = Math.floor(
         randomNormal(fish.lengthRangeInCm[0], fish.lengthRangeInCm[1])
       );
 
       const expirationDate = Date.now() + fish.secondsFishable * 1000;
-      const fishInstance = {
+      const fishInstance: FishInstance = {
         ...fish,
         length,
         expirationDate,
@@ -50,9 +87,35 @@ export default class FishingService {
    * @param userId
    * @returns
    */
-  collectFish(userId: number) {
-    const collectedFish = this.userCurrentFish.get(userId);
+  async collectFish(userId: number) {
+    const collectedFish: FishInstance | undefined = this.userCurrentFish.get(userId);
     if (collectedFish) {
+      const sameFish = await this.fishDao.getFish({
+        fish_id: collectedFish.id,
+        pond_user_id: userId
+      });
+      if (sameFish) {
+        await this.fishDao.updateFish(
+          {
+            fish_id: collectedFish.id,
+            pond_user_id: userId
+          },
+          {
+            count: sameFish.count + 1,
+            length: Math.max(collectedFish.length, sameFish.length)
+          }
+        );
+      } else {
+        await this.fishDao.insertFish(
+          {
+            fish_id: collectedFish.id,
+            pond_user_id: userId,
+            length: collectedFish.length
+          }
+        )
+      }
+      await this.pondUserDao.incrementPondUserExp(userId, collectedFish.expRewarded);
+    
       this.userCurrentFish.delete(userId);
       return collectedFish;
     }

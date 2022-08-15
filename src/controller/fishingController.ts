@@ -1,7 +1,13 @@
+import FishDao from '../dao/fishDao';
+import PondUserDao from '../dao/pondUserDao';
 import FishingService from '../service/fishingService';
 
 class FishingController {
-  fishingService: FishingService = new FishingService();
+  fishingService: FishingService;
+
+  constructor (pondUserDao: PondUserDao, fishDao: FishDao) {
+    this.fishingService = new FishingService(pondUserDao, fishDao)
+  }
 
   /**
    *
@@ -24,9 +30,9 @@ class FishingController {
    * @param userId
    * @returns
    */
-  collectFish(userId: number) {
+  async collectFish(userId: number) {
     try {
-      return this.fishingService.collectFish(userId);
+      return await this.fishingService.collectFish(userId);
     } catch (err) {
       console.error(err);
     }

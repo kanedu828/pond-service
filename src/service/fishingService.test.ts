@@ -1,8 +1,41 @@
 import FishingService from './fishingService';
 import { Fish } from '../data/fishTypes';
 import * as util from '../util';
+import PondUserDao from '../dao/pondUserDao';
+import FishDao from '../dao/fishDao';
 
-const fishingService = new FishingService();
+
+
+
+const mockUser = {
+  id: 1,
+  username: 'test-user',
+  email: 'test@example.com',
+  googleId: 'my-google-id',
+  exp: 1,
+  location: 'Pond',
+}
+
+jest.mock('../dao/pondUserDao');
+
+const mockPondUserDao: jest.Mocked<PondUserDao> = {
+  db: jest.fn(),
+  getPondUser: jest.fn().mockResolvedValue(mockUser),
+  insertPondUser: jest.fn(),
+  updatePondUser: jest.fn(),
+  incrementPondUserExp: jest.fn(),
+};
+
+jest.mock('../dao/fishDao');
+
+const mockFishDao: jest.Mocked<FishDao> = {
+  db: jest.fn(),
+  getFish: jest.fn(),
+  insertFish: jest.fn(),
+  updateFish: jest.fn(),
+};
+
+const fishingService = new FishingService(mockPondUserDao, mockFishDao);
 
 const mockFish: Fish = {
   id: 1,
@@ -21,6 +54,10 @@ jest.spyOn(util, 'randomNormal').mockReturnValue(2);
 jest.spyOn(util, 'getRandomRarity').mockReturnValue('rare');
 jest.spyOn(Date, 'now').mockReturnValue(0);
 
+beforeEach(() => {
+  fishingService.userCurrentFish.delete(1);
+});
+
 test('Test get fish when user does not have current fish', async () => {
   const expectedResult = {
     ...mockFish,
@@ -32,25 +69,48 @@ test('Test get fish when user does not have current fish', async () => {
 });
 
 test('Test get fish when user does have current fish', async () => {
-  await fishingService.getFish(1, 1, 2);
+  const mockFishInstance = {
+    ...mockFish,
+    length: 2,
+    expirationDate: 1000,
+  };
+  fishingService.userCurrentFish.set(1, mockFishInstance)
   const fish = await fishingService.getFish(1, 1, 2);
   expect(fish).toBe(null);
 });
 
-test('Test collectFish if user has fish', () => {
+test('Test get fish when user has invalid location', async () => {
+  mockPondUserDao.getPondUser = jest.fn().mockResolvedValueOnce({
+    id: 1,
+    username: 'test-user',
+    email: 'test@example.com',
+    googleId: 'my-google-id',
+    exp: 1,
+    location: 'asdfasdf',
+  });
+  const expectedResult = {
+    ...mockFish,
+    expirationDate: 1000,
+    length: 2,
+  };
+  const fish = await fishingService.getFish(1, 1, 2);
+  expect(fish).toStrictEqual(expectedResult);
+});
+
+test('Test collectFish if user has fish', async () => {
   const mockFishInstance = {
     ...mockFish,
     length: 2,
     expirationDate: 1000,
   };
   fishingService.userCurrentFish.set(1, mockFishInstance);
-  const result = fishingService.collectFish(1);
+  const result = await fishingService.collectFish(1);
   expect(result).toStrictEqual(mockFishInstance);
   expect(fishingService.userCurrentFish.get(1)).toBe(undefined);
 });
 
-test('Test collectFish if user has no fish', () => {
-  const result = fishingService.collectFish(1);
+test('Test collectFish if user has no fish', async () => {
+  const result = await fishingService.collectFish(1);
   expect(result).toBe(null);
 });
 

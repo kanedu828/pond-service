@@ -5,6 +5,7 @@ export async function up(knex: Knex): Promise<void> {
     table.increments();
     table.integer('length').notNullable();
     table.integer('fish_id').notNullable().index();
+    table.integer('count').notNullable().defaultTo(0);
     table
       .integer('pond_user_id')
       .notNullable()
@@ -13,6 +14,7 @@ export async function up(knex: Knex): Promise<void> {
       .onDelete('CASCADE')
       .index();
     table.timestamps(true, true);
+    table.unique(['pond_user_id', 'fish_id']);
   });
 }
 

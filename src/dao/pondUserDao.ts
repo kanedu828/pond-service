@@ -33,10 +33,7 @@ class PondUserDao {
     const pondUser = await this.db('pond_user')
       .returning(allColumns)
       .where(key)
-      .update({
-        username: columns.username,
-        location: columns.location,
-      });
+      .update(columns);
     return pondUser[0];
   }
 

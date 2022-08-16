@@ -74,9 +74,9 @@ test('Test get fish when user does have current fish', async () => {
     length: 2,
     expirationDate: 1000,
   };
-  fishingService.userCurrentFish.set(1, mockFishInstance)
+  fishingService.userCurrentFish.set(1, mockFishInstance);
   const fish = await fishingService.getFish(1, 1, 2);
-  expect(fish).toBe(null);
+  expect(fish).toBe(fishingService.userCurrentFish.get(1));
 });
 
 test('Test get fish when user has invalid location', async () => {

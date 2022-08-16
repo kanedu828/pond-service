@@ -16,9 +16,9 @@ class FishingController {
    * @param high
    * @returns
    */
-  async getFish(userId: number, low: number, high: number) {
+  async getFish(userId: number) {
     try {
-      return await this.fishingService.getFish(userId, low, high);
+      return await this.fishingService.getFish(userId, 10, 30);
     } catch (err) {
       console.error(err);
     }

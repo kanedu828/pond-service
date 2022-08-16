@@ -6,13 +6,14 @@ import cors from 'cors';
 import cookieSession from 'cookie-session';
 import knex from 'knex';
 import fishingSocket from './sockets/fishing';
-import authRouter from './routers/authentication';
+import getAuthenticationRouter from './routers/authentication';
 import setupAuth from './authSetup';
 import { isLoggedIn } from './middleware';
 import PondUserController from './controller/pondUserController';
 import FishingController from './controller/fishingController';
 import PondUserDao from './dao/pondUserDao';
 import FishDao from './dao/fishDao';
+import getUserRouter from './routers/user';
 
 const app: Application = express();
 
@@ -66,6 +67,7 @@ io.use(wrap(isLoggedIn));
 
 fishingSocket(io, fishingController);
 
-app.use('/auth', authRouter);
+app.use('/auth', getAuthenticationRouter());
+app.use('/user', getUserRouter(pondUserController, fishingController));
 
 server.listen(5000, () => console.log('Server Running'));

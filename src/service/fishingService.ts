@@ -46,7 +46,8 @@ export default class FishingService {
   async getFish(userId: number, low: number, high: number) {
     const secondsUntilNextFish = getRandomInt(low, high);
     await sleep(secondsUntilNextFish * 1000);
-    if (!this.getCurrentFish(userId)) {
+    const currentFish = this.getCurrentFish(userId);
+    if (!currentFish) {
       const user = await this.pondUserDao.getPondUser({
         id: userId
       });
@@ -79,7 +80,7 @@ export default class FishingService {
       this.userCurrentFish.set(userId, fishInstance);
       return fishInstance;
     }
-    return null;
+    return currentFish;
   }
 
   /**
@@ -88,7 +89,7 @@ export default class FishingService {
    * @returns
    */
   async collectFish(userId: number) {
-    const collectedFish: FishInstance | undefined = this.userCurrentFish.get(userId);
+    const collectedFish: FishInstance | null = this.getCurrentFish(userId);
     if (collectedFish) {
       const sameFish = await this.fishDao.getFish({
         fish_id: collectedFish.id,
@@ -110,7 +111,8 @@ export default class FishingService {
           {
             fish_id: collectedFish.id,
             pond_user_id: userId,
-            length: collectedFish.length
+            length: collectedFish.length,
+            count: 1
           }
         )
       }

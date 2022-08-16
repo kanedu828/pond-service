@@ -29,9 +29,7 @@ const fishingSocket = (io: any, fishingController: FishingController) => {
 
     while (true) {
       const fishInstance = await fishingController.getFish(userId, 10, 30);
-      if (fishInstance) {
-        socket.emit('new-fish', fishInstance);
-      }
+      socket.emit('new-fish', fishInstance);
     }
   });
 };

@@ -6,25 +6,31 @@ const getAuthenticationRouter = () => {
 
   router.get(
     '/google',
-    passport.authenticate('google', { scope: ['profile', 'email'] })
+    passport.authenticate('google', {
+      scope: ['profile', 'email'],
+      prompt: 'select_account'
+    })
   );
 
   router.get(
     '/google/callback',
     passport.authenticate('google', {
       successRedirect: 'http://127.0.0.1:3000',
-      failureRedirect: 'http://127.0.0.1:3000',
     })
   );
 
   router.get('/logout', (req: Request, res: Response) => {
-    // req.session = null;
-    req.logout(err => {
+    req.session.destroy(err => {
       if (err) {
-        console.log(err);
+        res.status(400).json(err);
       }
     });
-    res.redirect('/');
+    req.logout(err => {
+      if (err) {
+        res.status(400).json(err);
+      }
+    });
+    res.status(200);
   });
 
   router.get('/good', (req: Request, res: Response) => {

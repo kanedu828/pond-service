@@ -4,7 +4,7 @@ const fishingSocket = (io: any, fishingController: FishingController) => {
   io.on('connection', async (socket: any) => {
     const userId = socket.request.user.id;
 
-    const lastConnectedSocketId = fishingController.getLastConnectedSocketId(
+    const lastConnectedSocketId = fishingController.updateConnectedSocketId(
       userId,
       socket.id
     );
@@ -24,8 +24,8 @@ const fishingSocket = (io: any, fishingController: FishingController) => {
       socket.emit('caught-fish', collectedFish);
     });
 
-    while (true) {
-      const fishInstance = await fishingController.getFish(userId);
+    while (socket.id == fishingController.getConnectedSocketId(userId)) {
+      const fishInstance = await fishingController.getFish(userId, socket.id);
       socket.emit('new-fish', fishInstance);
     }
   });

@@ -16,9 +16,9 @@ class FishingController {
    * @param high
    * @returns
    */
-  async getFish(userId: number) {
+  async getFish(userId: number, socketId: number) {
     try {
-      return await this.fishingService.getFish(userId, 10, 30);
+      return await this.fishingService.getFish(userId, socketId,  600, 3600);
     } catch (err) {
       console.error(err);
     }
@@ -48,11 +48,20 @@ class FishingController {
     return null;
   }
 
-  getLastConnectedSocketId(userId: number, socketId: number) {
+  updateConnectedSocketId(userId: number, socketId: number) {
     try {
-      return this.fishingService.getLastConnectedSocketId(userId, socketId);
+      return this.fishingService.updateConnectedSocketId(userId, socketId);
     } catch (err) {
-      console.log(err);
+      console.error(err);
+    }
+    return null;
+  }
+
+  getConnectedSocketId(userId: number) {
+    try {
+      return this.fishingService.getConnectSocketId(userId);
+    } catch (err) {
+      console.error(err);
     }
     return null;
   }

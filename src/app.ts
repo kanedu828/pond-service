@@ -13,6 +13,7 @@ import FishingController from './controller/fishingController';
 import PondUserDao from './dao/pondUserDao';
 import FishDao from './dao/fishDao';
 import getUserRouter from './routers/user';
+import session from 'express-session';
 
 const app: Application = express();
 
@@ -23,9 +24,14 @@ app.use(
   })
 );
 
-const sessionMiddleware = cookieSession({
-  name: 'pond-session',
-  keys: ['key1', 'key2'],
+// const sessionMiddleware = cookieSession({
+//   name: 'pond-session',
+//   keys: ['key1', 'key2'],
+// });
+const sessionMiddleware = session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true
 });
 
 // App middleware

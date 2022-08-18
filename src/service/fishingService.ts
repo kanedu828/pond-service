@@ -43,7 +43,7 @@ export default class FishingService {
    * @param high
    * @returns
    */
-  async getFish(userId: number, low: number, high: number) {
+  async getFish(userId: number, socketId: number, low: number, high: number) {
     const secondsUntilNextFish = getRandomInt(low, high);
     await sleep(secondsUntilNextFish * 1000);
     const currentFish = this.getCurrentFish(userId);
@@ -77,7 +77,11 @@ export default class FishingService {
         length,
         expirationDate,
       };
-      this.userCurrentFish.set(userId, fishInstance);
+      // This is needed because extra sessions are still active even after logging out/disconnecting
+      // This causes client to recieve fish earlier by refreshing page.
+      if (socketId == this.getConnectSocketId(userId)) {
+        this.userCurrentFish.set(userId, fishInstance);
+      }
       return fishInstance;
     }
     return currentFish;
@@ -147,9 +151,13 @@ export default class FishingService {
    * @param socketId
    * @returns
    */
-  getLastConnectedSocketId(userId: number, socketId: number) {
+  updateConnectedSocketId(userId: number, socketId: number) {
     const lastSocketId = this.connectedUsers.get(userId) || null;
     this.connectedUsers.set(userId, socketId);
     return lastSocketId;
+  }
+
+  getConnectSocketId(userId: number) {
+    return this.connectedUsers.get(userId) || null;
   }
 }

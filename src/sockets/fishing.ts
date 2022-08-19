@@ -24,9 +24,8 @@ const fishingSocket = (io: any, fishingController: FishingController) => {
       socket.emit('caught-fish', collectedFish);
     });
 
-    while (socket.id == fishingController.getConnectedSocketId(userId)) {
-      const fishInstance = await fishingController.getFish(userId, socket.id);
-      socket.emit('new-fish', fishInstance);
+    while (socket.id === fishingController.getConnectedSocketId(userId)) {
+      await fishingController.pollFish(socket);
     }
   });
 };

@@ -6,7 +6,13 @@ interface FishColumns {
   count?: number;
 }
 
-const allColumns = ['length', 'fish_id', 'pond_user_id', 'created_at', 'updated_at'];
+const allColumns = [
+  'length',
+  'fish_id',
+  'pond_user_id',
+  'created_at',
+  'updated_at',
+];
 
 class FishDao {
   // Knex db instance

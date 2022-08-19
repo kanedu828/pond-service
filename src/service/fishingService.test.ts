@@ -4,9 +4,6 @@ import * as util from '../util';
 import PondUserDao from '../dao/pondUserDao';
 import FishDao from '../dao/fishDao';
 
-
-
-
 const mockUser = {
   id: 1,
   username: 'test-user',
@@ -14,7 +11,7 @@ const mockUser = {
   googleId: 'my-google-id',
   exp: 1,
   location: 'Pond',
-}
+};
 
 jest.mock('../dao/pondUserDao');
 

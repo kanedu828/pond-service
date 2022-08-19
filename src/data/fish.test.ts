@@ -43,5 +43,5 @@ test('validate fish json data', () => {
 
     fishSet.add(element.id);
   };
-  fishJson.ponds.forEach((pond) => pond.fish.forEach(validateFish));
+  fishJson.ponds.forEach(pond => pond.fish.forEach(validateFish));
 });

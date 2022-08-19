@@ -1,12 +1,13 @@
 import FishDao from '../dao/fishDao';
 import PondUserDao from '../dao/pondUserDao';
 import FishingService from '../service/fishingService';
+import { sleep } from '../util';
 
 class FishingController {
   fishingService: FishingService;
 
-  constructor (pondUserDao: PondUserDao, fishDao: FishDao) {
-    this.fishingService = new FishingService(pondUserDao, fishDao)
+  constructor(pondUserDao: PondUserDao, fishDao: FishDao) {
+    this.fishingService = new FishingService(pondUserDao, fishDao);
   }
 
   /**
@@ -18,11 +19,24 @@ class FishingController {
    */
   async getFish(userId: number, socketId: number) {
     try {
-      return await this.fishingService.getFish(userId, socketId,  600, 3600);
+      return await this.fishingService.getFish(userId, socketId, 10, 30);
     } catch (err) {
       console.error(err);
     }
     return null;
+  }
+
+  /**
+   *
+   * @param socket
+   */
+  async pollFish(socket: any) {
+    await sleep(10000);
+    const userId = socket.request.user.id;
+    const currentFish = await this.fishingService.pollFish(userId, 10, 30);
+    if (currentFish) {
+      socket.emit('new-fish', currentFish);
+    }
   }
 
   /**

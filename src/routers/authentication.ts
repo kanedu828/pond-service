@@ -8,7 +8,7 @@ const getAuthenticationRouter = () => {
     '/google',
     passport.authenticate('google', {
       scope: ['profile', 'email'],
-      prompt: 'select_account'
+      prompt: 'select_account',
     })
   );
 
@@ -42,6 +42,6 @@ const getAuthenticationRouter = () => {
   });
 
   return router;
-}
+};
 
-export default getAuthenticationRouter
+export default getAuthenticationRouter;

@@ -5,6 +5,7 @@ import passport from 'passport';
 import cors from 'cors';
 import cookieSession from 'cookie-session';
 import knex from 'knex';
+import session from 'express-session';
 import fishingSocket from './sockets/fishing';
 import getAuthenticationRouter from './routers/authentication';
 import { isLoggedIn, setupAuth } from './middleware';
@@ -13,7 +14,6 @@ import FishingController from './controller/fishingController';
 import PondUserDao from './dao/pondUserDao';
 import FishDao from './dao/fishDao';
 import getUserRouter from './routers/user';
-import session from 'express-session';
 
 const app: Application = express();
 
@@ -31,7 +31,7 @@ app.use(
 const sessionMiddleware = session({
   secret: 'keyboard cat',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
 });
 
 // App middleware
@@ -73,6 +73,6 @@ io.use(wrap(isLoggedIn));
 fishingSocket(io, fishingController);
 
 app.use('/auth', getAuthenticationRouter());
-app.use('/user', getUserRouter(pondUserController, fishingController));
+app.use('/user', getUserRouter(pondUserController));
 
 server.listen(5000, () => console.log('Server Running'));

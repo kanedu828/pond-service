@@ -9,11 +9,11 @@ export interface Fish {
 }
 
 export interface Pond {
-  name: string,
-  requiredLevel: number,
-  fish: Fish[]
+  name: string;
+  requiredLevel: number;
+  fish: Fish[];
 }
 
 export interface FishCollection {
-  pond: Pond
+  pond: Pond;
 }

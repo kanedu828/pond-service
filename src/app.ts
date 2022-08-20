@@ -3,7 +3,6 @@ import http from 'http';
 import { Server } from 'socket.io';
 import passport from 'passport';
 import cors from 'cors';
-import cookieSession from 'cookie-session';
 import knex from 'knex';
 import session from 'express-session';
 import fishingSocket from './sockets/fishing';
@@ -24,10 +23,6 @@ app.use(
   })
 );
 
-// const sessionMiddleware = cookieSession({
-//   name: 'pond-session',
-//   keys: ['key1', 'key2'],
-// });
 const sessionMiddleware = session({
   secret: 'keyboard cat',
   resave: false,

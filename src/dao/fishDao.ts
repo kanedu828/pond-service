@@ -23,7 +23,7 @@ class FishDao {
   }
 
   async getFish(key: FishColumns) {
-    const fish = await this.db('fish').where(key).first();
+    const fish = await this.db('fish').where(key);
     return fish;
   }
 

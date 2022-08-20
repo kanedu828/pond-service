@@ -2,9 +2,7 @@ import { Router, Request, Response } from 'express';
 import PondUserController from '../controller/pondUserController';
 import { isLoggedIn } from '../middleware';
 
-const getUserRouter = (
-  pondUserController: PondUserController,
-) => {
+const getUserRouter = (pondUserController: PondUserController) => {
   const router: any = Router();
 
   router.use(isLoggedIn);

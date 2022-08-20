@@ -134,11 +134,12 @@ export default class FishingService {
   async collectFish(userId: number) {
     const collectedFish: FishInstance | null = this.getCurrentFish(userId);
     if (collectedFish) {
-      const sameFish = await this.fishDao.getFish({
+      const fishQuery = await this.fishDao.getFish({
         fish_id: collectedFish.id,
         pond_user_id: userId,
       });
-      if (sameFish) {
+      if (fishQuery) {
+        const sameFish = fishQuery[0];
         await this.fishDao.updateFish(
           {
             fish_id: collectedFish.id,

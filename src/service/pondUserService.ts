@@ -1,12 +1,16 @@
 import { randomBytes } from 'crypto';
+import FishDao from '../dao/fishDao';
 import PondUserDao from '../dao/pondUserDao';
 import PondUser from '../models/pondUserModel';
+import UserFish from '../models/userFishModel';
 
 class PondUserService {
   pondUserDao: PondUserDao;
+  fishDao: FishDao;
 
-  constructor(pondUserDao: PondUserDao) {
+  constructor(pondUserDao: PondUserDao, fishDao: FishDao) {
     this.pondUserDao = pondUserDao;
+    this.fishDao = fishDao
   }
 
   /**
@@ -51,6 +55,20 @@ class PondUserService {
    */
   async getPondUser(id: number): Promise<Express.User> {
     const result = await this.pondUserDao.getPondUser({ id });
+    return result;
+  }
+
+  async getUserFish(id: number): Promise<UserFish[]> {
+    let result = await this.fishDao.getFish({ pond_user_id: id });
+    result.map((element: any) => {
+      const userFish: UserFish = {
+        id: element.fish_id,
+        length: element.length,
+        count: element.count,
+        pondUserId: element.pond_user_id
+      }
+      return userFish;
+    });
     return result;
   }
 }

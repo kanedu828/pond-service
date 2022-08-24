@@ -1,13 +1,15 @@
 import { Request, Response } from 'express';
 import { Profile } from 'passport-google-oauth20';
+import FishDao from '../dao/fishDao';
 import PondUserDao from '../dao/pondUserDao';
+import PondUser from '../models/pondUserModel';
 import PondUserService from '../service/pondUserService';
 
 class PondUserController {
   pondUserService: PondUserService;
 
-  constructor(pondUserDao: PondUserDao) {
-    this.pondUserService = new PondUserService(pondUserDao);
+  constructor(pondUserDao: PondUserDao, fishDao: FishDao) {
+    this.pondUserService = new PondUserService(pondUserDao, fishDao);
   }
 
   /**
@@ -61,6 +63,20 @@ class PondUserController {
       console.error(err);
     }
     return null;
+  }
+
+  async getUserFish(req: Request, res: Response): Promise<void> {
+    const user: PondUser = req.user as PondUser;
+    if (!user) {
+      res.status(401);
+    }
+    try {
+      const userFish = await this.pondUserService.getUserFish(user.id);
+      res.json(userFish);
+    } catch (err) {
+      console.error(err);
+      res.status(400);
+    }
   }
 }
 

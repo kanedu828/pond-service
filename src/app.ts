@@ -42,7 +42,7 @@ const db = knex({
 
 const pondUserDao = new PondUserDao(db);
 const fishDao = new FishDao(db);
-const pondUserController = new PondUserController(pondUserDao);
+const pondUserController = new PondUserController(pondUserDao, fishDao);
 const fishingController = new FishingController(pondUserDao, fishDao);
 // ------------------------------------------------------------
 

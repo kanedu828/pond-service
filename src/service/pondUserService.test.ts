@@ -1,5 +1,6 @@
 import PondUserService from './pondUserService';
 import PondUserDao from '../dao/pondUserDao';
+import FishDao from '../dao/fishDao';
 
 const mockUser = {
   id: 123,
@@ -20,7 +21,14 @@ const mockPondUserDao: jest.Mocked<PondUserDao> = {
   incrementPondUserExp: jest.fn(),
 };
 
-const pondUserService = new PondUserService(mockPondUserDao);
+const mockFishDao: jest.Mocked<FishDao> = {
+  db: jest.fn(),
+  getFish: jest.fn(),
+  updateFish: jest.fn(),
+  insertFish: jest.fn(),
+};
+
+const pondUserService = new PondUserService(mockPondUserDao, mockFishDao);
 
 test('Test getPondUser when id exists', async () => {
   mockPondUserDao.getPondUser.mockResolvedValueOnce(mockUser);
@@ -64,4 +72,24 @@ test('Test getOrCreatePondUser when id does not exist', async () => {
   );
   expect(results).toStrictEqual(expectedUser);
   expect(mockPondUserDao.insertPondUser).toHaveBeenCalledTimes(1);
+});
+
+test('Test getUserFish', async () => {
+  const fishArray = [
+    {
+      id: 1,
+      pond_user_id: 1,
+      length: 10,
+      count: 5
+    },
+    {
+      id: 2,
+      pond_user_id: 1,
+      length: 5,
+      count: 2
+    }
+  ];
+  mockFishDao.getFish.mockResolvedValueOnce(fishArray);
+  const results = await pondUserService.getUserFish(1);
+  expect(results).toBe(fishArray);
 });

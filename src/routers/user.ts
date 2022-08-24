@@ -11,6 +11,10 @@ const getUserRouter = (pondUserController: PondUserController) => {
     res.json(req.user);
   });
 
+  router.get('/fish', async (req: Request, res: Response) => {
+    await pondUserController.getUserFish(req, res);
+  });
+
   return router;
 };
 

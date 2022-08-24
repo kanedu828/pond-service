@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-import-module-exports
 import type { Knex } from 'knex';
 
 // Update with your config settings.

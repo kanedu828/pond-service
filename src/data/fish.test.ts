@@ -2,7 +2,10 @@ import fishJson from './fish.json';
 
 test('validate fish json data', () => {
   const fishSet = new Set();
-  const validateFish = (element: any) => {
+  const validateFish = (element: any, lastId: number): number => {
+    if (element.id <= lastId) {
+      throw new Error(`Fish id ${element.id} is not in order`);
+    }
     if (!('id' in element)) {
       throw new Error(`A fish does not have an id`);
     }
@@ -27,6 +30,9 @@ test('validate fish json data', () => {
     if (!('rarity' in element)) {
       throw new Error(`Fish id ${element.id} does not have a rarirty`);
     }
+    if (!('pond' in element)) {
+      throw new Error(`Fish id ${element.id} does not have a pond`);
+    }
     if (element.lengthRangeInCm.length !== 2) {
       throw new Error(
         `Fish id ${element.id} lengthRangeInCm array is not of length 2`
@@ -42,6 +48,10 @@ test('validate fish json data', () => {
     }
 
     fishSet.add(element.id);
+    return element.id;
   };
-  fishJson.ponds.forEach(pond => pond.fish.forEach(validateFish));
+  let lastId = -1;
+  fishJson.forEach(fish => {
+    lastId = validateFish(fish, lastId);
+  });
 });

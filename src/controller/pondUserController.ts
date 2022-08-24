@@ -2,8 +2,11 @@ import { Request, Response } from 'express';
 import { Profile } from 'passport-google-oauth20';
 import FishDao from '../dao/fishDao';
 import PondUserDao from '../dao/pondUserDao';
+import { Fish } from '../data/fishTypes';
 import PondUser from '../models/pondUserModel';
 import PondUserService from '../service/pondUserService';
+import fishJson from '../data/fish.json';
+import { binarySearch } from '../util';
 
 class PondUserController {
   pondUserService: PondUserService;
@@ -72,6 +75,18 @@ class PondUserController {
     }
     try {
       const userFish = await this.pondUserService.getUserFish(user.id);
+      userFish.map(fish => {
+        const fishIndex = binarySearch<Fish>(
+          fishJson,
+          fish.id,
+          (element: Fish) => element.id
+        );
+        const fishData: Fish = fishJson[fishIndex];
+        return {
+          ...fish,
+          ...fishData,
+        };
+      });
       res.json(userFish);
     } catch (err) {
       console.error(err);

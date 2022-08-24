@@ -40,3 +40,25 @@ export const getRandomRarity = (): string => {
 
 export const getRandomArrayElement = (arr: any[]): any =>
   arr[Math.floor(Math.random() * arr.length)];
+
+export const binarySearch = <Type>(
+  arr: Type[],
+  target: any,
+  // eslint-disable-next-line no-unused-vars
+  func: (element: Type) => any
+): number => {
+  let low = 0;
+  let high = arr.length - 1;
+  while (low <= high) {
+    const mid = Math.floor((low + high) / 2);
+    const value = func(arr[mid]);
+    if (value < target) {
+      low = mid + 1;
+    } else if (value > target) {
+      high = mid - 1;
+    } else {
+      return mid;
+    }
+  }
+  return -1;
+};

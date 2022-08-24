@@ -1,8 +1,8 @@
 interface UserFish {
-    id: number,
-    pondUserId: number,
-    count: number,
-    length: number
+  id: number;
+  pondUserId: number;
+  count: number;
+  length: number;
 }
 
 export default UserFish;

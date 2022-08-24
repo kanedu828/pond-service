@@ -44,11 +44,9 @@ export default class FishingService {
    * @returns
    */
   static generateFish(location: string) {
-    const pond = fishJson.ponds.find(element => element.name === location);
-
     const rarity = getRandomRarity();
-    const fishOfRarity = pond?.fish.filter(
-      element => element.rarity === rarity
+    const fishOfRarity = fishJson.filter(
+      element => element.rarity === rarity && element.pond === location
     );
     const fish: Fish = getRandomArrayElement(fishOfRarity || []);
 

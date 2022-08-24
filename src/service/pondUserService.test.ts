@@ -80,14 +80,14 @@ test('Test getUserFish', async () => {
       id: 1,
       pond_user_id: 1,
       length: 10,
-      count: 5
+      count: 5,
     },
     {
       id: 2,
       pond_user_id: 1,
       length: 5,
-      count: 2
-    }
+      count: 2,
+    },
   ];
   mockFishDao.getFish.mockResolvedValueOnce(fishArray);
   const results = await pondUserService.getUserFish(1);

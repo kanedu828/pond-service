@@ -6,11 +6,12 @@ import UserFish from '../models/userFishModel';
 
 class PondUserService {
   pondUserDao: PondUserDao;
+
   fishDao: FishDao;
 
   constructor(pondUserDao: PondUserDao, fishDao: FishDao) {
     this.pondUserDao = pondUserDao;
-    this.fishDao = fishDao
+    this.fishDao = fishDao;
   }
 
   /**
@@ -59,14 +60,14 @@ class PondUserService {
   }
 
   async getUserFish(id: number): Promise<UserFish[]> {
-    let result = await this.fishDao.getFish({ pond_user_id: id });
+    const result = await this.fishDao.getFish({ pond_user_id: id });
     result.map((element: any) => {
       const userFish: UserFish = {
         id: element.fish_id,
         length: element.length,
         count: element.count,
-        pondUserId: element.pond_user_id
-      }
+        pondUserId: element.pond_user_id,
+      };
       return userFish;
     });
     return result;

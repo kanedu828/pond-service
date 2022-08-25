@@ -16,7 +16,7 @@ const allColumns = [
 
 class FishDao {
   // Knex db instance
-  db: any;
+  readonly db: any;
 
   constructor(db: any) {
     this.db = db;

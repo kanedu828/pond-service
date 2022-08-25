@@ -5,9 +5,8 @@ import PondUser from '../models/pondUserModel';
 import UserFish from '../models/userFishModel';
 
 class PondUserService {
-  pondUserDao: PondUserDao;
-
-  fishDao: FishDao;
+  readonly pondUserDao: PondUserDao;
+  readonly fishDao: FishDao;
 
   constructor(pondUserDao: PondUserDao, fishDao: FishDao) {
     this.pondUserDao = pondUserDao;

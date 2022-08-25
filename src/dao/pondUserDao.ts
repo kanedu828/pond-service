@@ -11,7 +11,7 @@ const allColumns = ['id', 'email', 'google_id', 'username', 'exp', 'location'];
 
 class PondUserDao {
   // Knex db instance
-  db: any;
+  readonly db: any;
 
   constructor(db: any) {
     this.db = db;

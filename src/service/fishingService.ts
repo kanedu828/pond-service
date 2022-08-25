@@ -23,15 +23,11 @@ interface FishInstance {
 }
 
 export default class FishingService {
-  userCurrentFish = new Map<number, FishInstance>();
-
-  connectedUsers = new Map<number, number>();
-
-  nextFishDue = new Map<number, number>();
-
-  pondUserDao: PondUserDao;
-
-  fishDao: FishDao;
+  readonly userCurrentFish = new Map<number, FishInstance>();
+  readonly connectedUsers = new Map<number, number>();
+  readonly nextFishDue = new Map<number, number>();
+  readonly pondUserDao: PondUserDao;
+  readonly fishDao: FishDao;
 
   constructor(pondUserDao: PondUserDao, fishDao: FishDao) {
     this.pondUserDao = pondUserDao;

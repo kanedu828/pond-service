@@ -42,6 +42,7 @@ const mockFish: Fish = {
   expRewarded: 1,
   rarity: 'rare',
   secondsFishable: 1,
+  pond: 'Pond'
 };
 
 jest.spyOn(util, 'getRandomArrayElement').mockReturnValue(mockFish);

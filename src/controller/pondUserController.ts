@@ -50,6 +50,7 @@ class PondUserController {
       res.status(200).json(pondUser);
     } catch (err) {
       console.error(err);
+      res.status(400).json(err);
     }
   }
 
@@ -82,15 +83,14 @@ class PondUserController {
           (element: Fish) => element.id
         );
         const fishData: Fish = fishJson[fishIndex];
-        return {
+        res.json({
           ...fish,
-          ...fishData,
-        };
+          ...fishData
+        });
       });
-      res.json(userFish);
     } catch (err) {
       console.error(err);
-      res.status(400);
+      res.status(400).json(err);
     }
   }
 }

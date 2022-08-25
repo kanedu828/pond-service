@@ -6,14 +6,10 @@ export interface Fish {
   expRewarded: number;
   rarity: string;
   secondsFishable: number;
+  pond: string;
 }
 
 export interface Pond {
   name: string;
   requiredLevel: number;
-  fish: Fish[];
-}
-
-export interface FishCollection {
-  pond: Pond;
 }

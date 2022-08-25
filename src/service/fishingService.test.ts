@@ -55,127 +55,163 @@ jest.spyOn(Date, 'now').mockReturnValue(0);
 beforeEach(() => {
   fishingService.userCurrentFish.delete(1);
   fishingService.nextFishDue.delete(1);
+  mockFishDao.insertFish.mockClear();
 });
 
-test('Test pollFish if user already has a fish', async () => {
-  const mockFishInstance = {
-    ...mockFish,
-    length: 2,
-    expirationDate: 1000,
-  };
-  fishingService.userCurrentFish.set(1, mockFishInstance);
-  const result = await fishingService.pollFish(1, 1, 2);
-  expect(result).toStrictEqual(mockFishInstance);
-});
-
-test('Test pollFish if fish due time is expired', async () => {
-  fishingService.nextFishDue.set(1, -999999);
-  const result = await fishingService.pollFish(1, 1, 2);
-  expect(fishingService.nextFishDue.get(1)).toBe(1000);
-  expect(result).toBe(null);
-});
-
-test('Test pollFish if fish is due on time', async () => {
-  fishingService.nextFishDue.set(1, -1);
-  const result = await fishingService.pollFish(1, 1, 2);
-  const mockFishInstance = {
-    ...mockFish,
-    length: 2,
-    expirationDate: 1000,
-  };
-  expect(result).toStrictEqual(mockFishInstance);
-});
-
-test('Test get fish when user does not have current fish', async () => {
-  const expectedResult = {
-    ...mockFish,
-    expirationDate: 1000,
-    length: 2,
-  };
-  const fish = await fishingService.getFish(1, 1, 1, 2);
-  expect(fish).toStrictEqual(expectedResult);
-});
-
-test('Test get fish when user does have current fish', async () => {
-  const mockFishInstance = {
-    ...mockFish,
-    length: 2,
-    expirationDate: 1000,
-  };
-  fishingService.userCurrentFish.set(1, mockFishInstance);
-  const fish = await fishingService.getFish(1, 1, 1, 2);
-  expect(fish).toBe(fishingService.userCurrentFish.get(1));
-});
-
-test('Test get fish when user has invalid location', async () => {
-  mockPondUserDao.getPondUser = jest.fn().mockResolvedValueOnce({
-    id: 1,
-    username: 'test-user',
-    email: 'test@example.com',
-    googleId: 'my-google-id',
-    exp: 1,
-    location: 'asdfasdf',
+describe('Test pollFish', () => {
+  it('user already has a fish', async () => {
+    const mockFishInstance = {
+      ...mockFish,
+      length: 2,
+      expirationDate: 1000,
+    };
+    fishingService.userCurrentFish.set(1, mockFishInstance);
+    const result = await fishingService.pollFish(1, 1, 2);
+    expect(result).toStrictEqual(mockFishInstance);
   });
-  const expectedResult = {
-    ...mockFish,
-    expirationDate: 1000,
-    length: 2,
-  };
-  const fish = await fishingService.getFish(1, 1, 1, 2);
-  expect(fish).toStrictEqual(expectedResult);
+  
+  it('fish due time is expired', async () => {
+    fishingService.nextFishDue.set(1, -999999);
+    const result = await fishingService.pollFish(1, 1, 2);
+    expect(fishingService.nextFishDue.get(1)).toBe(1000);
+    expect(result).toBe(null);
+  });
+  
+  it('fish is due on time', async () => {
+    fishingService.nextFishDue.set(1, -1);
+    const result = await fishingService.pollFish(1, 1, 2);
+    const mockFishInstance = {
+      ...mockFish,
+      length: 2,
+      expirationDate: 1000,
+    };
+    expect(result).toStrictEqual(mockFishInstance);
+  });
 });
 
-test('Test collectFish if user has fish', async () => {
-  const mockFishInstance = {
-    ...mockFish,
-    length: 2,
-    expirationDate: 1000,
-  };
-  fishingService.userCurrentFish.set(1, mockFishInstance);
-  const result = await fishingService.collectFish(1);
-  expect(result).toStrictEqual(mockFishInstance);
-  expect(fishingService.userCurrentFish.get(1)).toBe(undefined);
+describe('Test getFish', () => {
+  it('user does not have current fish', async () => {
+    const expectedResult = {
+      ...mockFish,
+      expirationDate: 1000,
+      length: 2,
+    };
+    const fish = await fishingService.getFish(1, 1, 1, 2);
+    expect(fish).toStrictEqual(expectedResult);
+  });
+  
+  it('user does have current fish', async () => {
+    const mockFishInstance = {
+      ...mockFish,
+      length: 2,
+      expirationDate: 1000,
+    };
+    fishingService.userCurrentFish.set(1, mockFishInstance);
+    const fish = await fishingService.getFish(1, 1, 1, 2);
+    expect(fish).toBe(fishingService.userCurrentFish.get(1));
+  });
+  
+  it('user has invalid location', async () => {
+    mockPondUserDao.getPondUser = jest.fn().mockResolvedValueOnce({
+      id: 1,
+      username: 'test-user',
+      email: 'test@example.com',
+      googleId: 'my-google-id',
+      exp: 1,
+      location: 'asdfasdf',
+    });
+    const expectedResult = {
+      ...mockFish,
+      expirationDate: 1000,
+      length: 2,
+    };
+    const fish = await fishingService.getFish(1, 1, 1, 2);
+    expect(fish).toStrictEqual(expectedResult);
+  });
 });
 
-test('Test collectFish if user has no fish', async () => {
-  const result = await fishingService.collectFish(1);
-  expect(result).toBe(null);
+describe('Test collectFish', () => {
+  it('user has current fish but no collected fish', async () => {
+    mockFishDao.getFish = jest.fn().mockResolvedValueOnce([]);
+    const mockFishInstance = {
+      ...mockFish,
+      length: 2,
+      expirationDate: 1000,
+    };
+    fishingService.userCurrentFish.set(1, mockFishInstance);
+    const result = await fishingService.collectFish(1);
+    expect(result).toStrictEqual(mockFishInstance);
+    expect(fishingService.userCurrentFish.get(1)).toBe(undefined);
+    expect(mockFishDao.updateFish).toHaveBeenCalledTimes(0);
+    expect(mockFishDao.insertFish).toHaveBeenCalledTimes(1);
+  });
+
+  it('user has current fish and has collected fish', async () => {
+    mockFishDao.getFish = jest.fn().mockResolvedValueOnce([
+      {
+        id: 1,
+        pond_user_id: 1,
+        count: 1,
+        length: 1
+      }
+    ]);
+    const mockFishInstance = {
+      ...mockFish,
+      length: 2,
+      expirationDate: 1000,
+    };
+    fishingService.userCurrentFish.set(1, mockFishInstance);
+    const result = await fishingService.collectFish(1);
+    expect(result).toStrictEqual(mockFishInstance);
+    expect(fishingService.userCurrentFish.get(1)).toBe(undefined);
+    expect(mockFishDao.updateFish).toHaveBeenCalledTimes(1);
+    expect(mockFishDao.insertFish).toHaveBeenCalledTimes(0);
+  });
+  
+  it('user has no current fish', async () => {
+    const result = await fishingService.collectFish(1);
+    expect(result).toBe(null);
+  });
 });
 
-test('Test getCurrentFish when user has non expired fish', () => {
-  const mockFishInstance = {
-    ...mockFish,
-    length: 2,
-    expirationDate: 1000,
-  };
-  fishingService.userCurrentFish.set(1, mockFishInstance);
-  const result = fishingService.getCurrentFish(1);
-  expect(result).toStrictEqual(mockFishInstance);
+describe('Test getCurrentFish', () => {
+  it('user has non expired fish', () => {
+    const mockFishInstance = {
+      ...mockFish,
+      length: 2,
+      expirationDate: 1000,
+    };
+    fishingService.userCurrentFish.set(1, mockFishInstance);
+    const result = fishingService.getCurrentFish(1);
+    expect(result).toStrictEqual(mockFishInstance);
+  });
+  
+  it('user has expired fish', () => {
+    const mockFishInstance = {
+      ...mockFish,
+      length: 2,
+      expirationDate: -1000,
+    };
+    fishingService.userCurrentFish.set(1, mockFishInstance);
+    const result = fishingService.getCurrentFish(1);
+    expect(result).toBe(null);
+  });
+  
+  it('user has no fish', () => {
+    const result = fishingService.getCurrentFish(1);
+    expect(result).toBe(null);
+  });
 });
 
-test('Test getCurrentFish when user has expired fish', () => {
-  const mockFishInstance = {
-    ...mockFish,
-    length: 2,
-    expirationDate: -1000,
-  };
-  fishingService.userCurrentFish.set(1, mockFishInstance);
-  const result = fishingService.getCurrentFish(1);
-  expect(result).toBe(null);
-});
-
-test('Test getCurrentFish when user has no fish', () => {
-  const result = fishingService.getCurrentFish(1);
-  expect(result).toBe(null);
-});
-
-test('Test getLastConnectedSocketId does not have existing socket id', () => {
-  const result = fishingService.updateConnectedSocketId(1, 1);
-  expect(result).toBe(null);
-});
-
-test('Test getLastConnectedSocketId with existing socket io', () => {
-  fishingService.connectedUsers.set(1, 1);
-  const result = fishingService.updateConnectedSocketId(1, 1);
-  expect(result).toBe(1);
+describe('Test getLastConnectedSocketId', () => {
+  it('does not have existing socket id', () => {
+    const result = fishingService.updateConnectedSocketId(1, 1);
+    expect(result).toBe(null);
+  });
+  
+  it('has existing socket io', () => {
+    fishingService.connectedUsers.set(1, 1);
+    const result = fishingService.updateConnectedSocketId(1, 1);
+    expect(result).toBe(1);
+  });
 });

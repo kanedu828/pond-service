@@ -30,66 +30,75 @@ const mockFishDao: jest.Mocked<FishDao> = {
 
 const pondUserService = new PondUserService(mockPondUserDao, mockFishDao);
 
-test('Test getPondUser when id exists', async () => {
-  mockPondUserDao.getPondUser.mockResolvedValueOnce(mockUser);
-  const results = await pondUserService.getPondUser(123);
-  expect(results).toBe(mockUser);
+describe(' Test getPondUser', () => {
+  it('user id exists', async () => {
+    mockPondUserDao.getPondUser.mockResolvedValueOnce(mockUser);
+    const results = await pondUserService.getPondUser(123);
+    expect(results).toBe(mockUser);
+  });
 });
 
-test('Test getOrCreatePondUser when id exists', async () => {
-  const expectedUser = {
-    id: 123,
-    username: 'test-user',
-    email: 'test@example.com',
-    googleId: 'my-google-id',
-    exp: 1,
-    location: 'default',
-  };
-  mockPondUserDao.getPondUser.mockResolvedValueOnce(mockUser);
-  mockPondUserDao.insertPondUser.mockResolvedValueOnce(mockUser);
-  const results = await pondUserService.getOrCreatePondUser(
-    'my-google-id',
-    'test@example.com'
-  );
-  expect(results).toStrictEqual(expectedUser);
-  expect(mockPondUserDao.insertPondUser).toHaveBeenCalledTimes(0);
+describe('Test getOrCreatePondUser', () => {
+  it('user id exists', async () => {
+    const expectedUser = {
+      id: 123,
+      username: 'test-user',
+      email: 'test@example.com',
+      googleId: 'my-google-id',
+      exp: 1,
+      location: 'default',
+    };
+    mockPondUserDao.getPondUser.mockResolvedValueOnce(mockUser);
+    mockPondUserDao.insertPondUser.mockResolvedValueOnce(mockUser);
+    const results = await pondUserService.getOrCreatePondUser(
+      'my-google-id',
+      'test@example.com'
+    );
+    expect(results).toStrictEqual(expectedUser);
+    expect(mockPondUserDao.insertPondUser).toHaveBeenCalledTimes(0);
+  });
+
+  it('user id does not exist', async () => {
+    const expectedUser = {
+      id: 123,
+      username: 'test-user',
+      email: 'test@example.com',
+      googleId: 'my-google-id',
+      exp: 1,
+      location: 'default',
+    };
+    mockPondUserDao.getPondUser.mockResolvedValueOnce(null);
+    mockPondUserDao.insertPondUser.mockResolvedValueOnce(mockUser);
+    const results = await pondUserService.getOrCreatePondUser(
+      'my-google-id',
+      'test@example.com'
+    );
+    expect(results).toStrictEqual(expectedUser);
+    expect(mockPondUserDao.insertPondUser).toHaveBeenCalledTimes(1);
+  });
 });
 
-test('Test getOrCreatePondUser when id does not exist', async () => {
-  const expectedUser = {
-    id: 123,
-    username: 'test-user',
-    email: 'test@example.com',
-    googleId: 'my-google-id',
-    exp: 1,
-    location: 'default',
-  };
-  mockPondUserDao.getPondUser.mockResolvedValueOnce(null);
-  mockPondUserDao.insertPondUser.mockResolvedValueOnce(mockUser);
-  const results = await pondUserService.getOrCreatePondUser(
-    'my-google-id',
-    'test@example.com'
-  );
-  expect(results).toStrictEqual(expectedUser);
-  expect(mockPondUserDao.insertPondUser).toHaveBeenCalledTimes(1);
+describe('test getUserFish', () => {
+  it('user has fish', async () => {
+    const fishArray = [
+      {
+        id: 1,
+        pond_user_id: 1,
+        length: 10,
+        count: 5,
+      },
+      {
+        id: 2,
+        pond_user_id: 1,
+        length: 5,
+        count: 2,
+      },
+    ];
+    mockFishDao.getFish.mockResolvedValueOnce(fishArray);
+    const results = await pondUserService.getUserFish(1);
+    expect(results).toBe(fishArray);
+  });
 });
 
-test('Test getUserFish', async () => {
-  const fishArray = [
-    {
-      id: 1,
-      pond_user_id: 1,
-      length: 10,
-      count: 5,
-    },
-    {
-      id: 2,
-      pond_user_id: 1,
-      length: 5,
-      count: 2,
-    },
-  ];
-  mockFishDao.getFish.mockResolvedValueOnce(fishArray);
-  const results = await pondUserService.getUserFish(1);
-  expect(results).toBe(fishArray);
-});
+
+

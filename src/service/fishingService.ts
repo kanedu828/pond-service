@@ -132,7 +132,7 @@ export default class FishingService {
         fish_id: collectedFish.id,
         pond_user_id: userId,
       });
-      if (fishQuery) {
+      if (fishQuery.length > 0) {
         const sameFish = fishQuery[0];
         await this.fishDao.updateFish(
           {

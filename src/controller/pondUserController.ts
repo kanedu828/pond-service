@@ -76,18 +76,19 @@ class PondUserController {
     }
     try {
       const userFish = await this.pondUserService.getUserFish(user.id);
-      userFish.map(fish => {
+      const userFishRes = userFish.map(fish => {
         const fishIndex = binarySearch<Fish>(
           fishJson,
-          fish.id,
+          fish.fishId,
           (element: Fish) => element.id
         );
         const fishData: Fish = fishJson[fishIndex];
-        res.json({
+        return {
           ...fish,
-          ...fishData
-        });
+          ...fishData,
+        };
       });
+      res.json(userFishRes);
     } catch (err) {
       console.error(err);
       res.status(400).json(err);

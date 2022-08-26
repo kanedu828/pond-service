@@ -6,7 +6,7 @@ export interface Fish {
   expRewarded: number;
   rarity: string;
   secondsFishable: number;
-  pond: string;
+  active: boolean;
 }
 
 export interface Pond {

@@ -1,5 +1,6 @@
 import { Fish } from '../data/fishTypes';
 import {
+  binarySearch,
   getRandomArrayElement,
   getRandomInt,
   getRandomRarity,
@@ -7,6 +8,7 @@ import {
   sleep,
 } from '../util/util';
 import fishJson from '../data/fish.json';
+import pondJson from '../data/ponds.json';
 import PondUserDao from '../dao/pondUserDao';
 import FishDao from '../dao/fishDao';
 
@@ -45,8 +47,20 @@ export default class FishingService {
    */
   static generateFish(location: string) {
     const rarity = getRandomRarity();
-    const fishOfRarity = fishJson.filter(
-      element => element.rarity === rarity && element.pond === location
+    const pond = pondJson.find(element => element.name === location);
+    if (!pond) {
+      throw new Error(`Pond ${location} does not exist.`);
+    }
+    const availableFish = pond.availableFish.map(fishId => {
+      const fishIndex = binarySearch(
+        fishJson,
+        fishId,
+        (element: Fish) => element.id
+      );
+      return fishJson[fishIndex];
+    });
+    const fishOfRarity = availableFish.filter(
+      element => element && element.rarity === rarity && element.active
     );
     const fish: Fish = getRandomArrayElement(fishOfRarity || []);
 

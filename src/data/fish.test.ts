@@ -30,8 +30,8 @@ test('validate fish json data', () => {
     if (!('rarity' in element)) {
       throw new Error(`Fish id ${element.id} does not have a rarirty`);
     }
-    if (!('pond' in element)) {
-      throw new Error(`Fish id ${element.id} does not have a pond`);
+    if (!('active' in element)) {
+      throw new Error(`Fish id ${element.id} does not have an active property`);
     }
     if (element.lengthRangeInCm.length !== 2) {
       throw new Error(

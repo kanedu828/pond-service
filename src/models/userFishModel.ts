@@ -1,5 +1,5 @@
 interface UserFish {
-  id: number;
+  fishId: number;
   pondUserId: number;
   count: number;
   length: number;

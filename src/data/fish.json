@@ -7,7 +7,7 @@
     "secondsFishable": 500,
     "expRewarded": 10,
     "rarity": "common",
-    "pond": "Pond"
+    "active": true
   },
   {
     "id": 1001,
@@ -17,96 +17,96 @@
     "secondsFishable": 500,
     "expRewarded": 10,
     "rarity": "common",
-    "pond": "Pond"
+    "active": true
   },
   {
-    "id": 1003,
+    "id": 1002,
     "name": "Carp",
     "description": "",
     "lengthRangeInCm": [27, 43],
     "secondsFishable": 600,
     "expRewarded": 7,
     "rarity": "common",
-    "pond": "Pond"
+    "active": true
   },
   {
-    "id": 1004,
+    "id": 1003,
     "name": "Mackerel",
     "description": "",
     "lengthRangeInCm": [22, 38],
     "secondsFishable": 600,
     "expRewarded": 10,
     "rarity": "common",
-    "pond": "Pond"
+    "active": true
   },
   {
-    "id": 1005,
+    "id": 1004,
     "name": "Catfish",
     "description": "",
     "lengthRangeInCm": [5, 450],
     "secondsFishable": 400,
     "expRewarded": 15,
     "rarity": "common",
-    "pond": "Pond"
+    "active": true
   },
   {
-    "id": 1006,
+    "id": 1005,
     "name": "Goldfish",
     "description": "",
     "lengthRangeInCm": [5, 30],
     "secondsFishable": 600,
     "expRewarded": 6,
     "rarity": "common",
-    "pond": "Pond"
+    "active": true
   },
   {
-    "id": 1101,
+    "id": 2000,
     "name": "Swordfish",
     "description": "",
     "lengthRangeInCm": [250, 350],
     "secondsFishable": 300,
     "expRewarded": 20,
     "rarity": "rare",
-    "pond": "Pond"
+    "active": true
   },
   {
-    "id": 1102,
+    "id": 2001,
     "name": "Eel",
     "description": "",
     "lengthRangeInCm": [10, 350],
     "secondsFishable": 300,
     "expRewarded": 20,
     "rarity": "rare",
-    "pond": "Pond"
+    "active": true
   },
   {
-    "id": 1103,
+    "id": 2002,
     "name": "Blue Tang",
     "description": "",
     "lengthRangeInCm": [15, 35],
     "secondsFishable": 400,
     "expRewarded": 18,
     "rarity": "rare",
-    "pond": "Pond"
+    "active": true
   },
   {
-    "id": 1201,
+    "id": 3000,
     "name": "Tiger Shark",
     "description": "",
     "lengthRangeInCm": [325, 425],
     "secondsFishable": 60,
     "expRewarded": 70,
     "rarity": "epic",
-    "pond": "Pond"
+    "active": true
   },
   {
-    "id": 1301,
+    "id": 4000,
     "name": "Whale Shark",
     "description": "",
     "lengthRangeInCm": [550, 1000],
     "secondsFishable": 5,
     "expRewarded": 1000,
     "rarity": "legendary",
-    "pond": "Pond"
+    "active": true
   }
 ]

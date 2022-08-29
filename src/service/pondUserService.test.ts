@@ -83,19 +83,35 @@ describe('test getUserFish', () => {
     const fishArray = [
       {
         id: 1,
+        fish_id: 1,
         pond_user_id: 1,
         length: 10,
         count: 5,
       },
       {
         id: 2,
+        fish_id: 2,
         pond_user_id: 1,
+        length: 5,
+        count: 2,
+      },
+    ];
+    const expectedFishArray = [
+      {
+        fishId: 1,
+        pondUserId: 1,
+        length: 10,
+        count: 5,
+      },
+      {
+        fishId: 2,
+        pondUserId: 1,
         length: 5,
         count: 2,
       },
     ];
     mockFishDao.getFish.mockResolvedValueOnce(fishArray);
     const results = await pondUserService.getUserFish(1);
-    expect(results).toBe(fishArray);
+    expect(results).toStrictEqual(expectedFishArray);
   });
 });

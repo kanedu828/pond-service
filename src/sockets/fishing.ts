@@ -2,29 +2,21 @@ import FishingController from '../controller/fishingController';
 
 const fishingSocket = (io: any, fishingController: FishingController) => {
   io.on('connection', async (socket: any) => {
-    const userId = socket.request.user.id;
-
-    const lastConnectedSocketId = fishingController.updateConnectedSocketId(
-      userId,
-      socket.id
-    );
+    const lastConnectedSocketId =
+      fishingController.updateConnectedSocketId(socket);
     if (lastConnectedSocketId) {
       io.sockets.sockets.get(lastConnectedSocketId)?.disconnect();
     }
 
-    const currentFish = fishingController.getCurrentFish(userId);
-    if (currentFish) {
-      socket.emit('new-fish', currentFish);
-    }
+    fishingController.getCurrentFish(socket);
 
     console.log(`${socket.id} has connected`);
 
     socket.on('collect-fish', async () => {
-      const collectedFish = await fishingController.collectFish(userId);
-      socket.emit('caught-fish', collectedFish);
+      await fishingController.collectFish(socket);
     });
 
-    while (socket.id === fishingController.getConnectedSocketId(userId)) {
+    while (socket.id === fishingController.getConnectedSocketId(socket)) {
       await fishingController.pollFish(socket);
     }
   });

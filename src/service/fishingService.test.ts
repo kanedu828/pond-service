@@ -1,6 +1,6 @@
 import FishingService from './fishingService';
 import { Fish } from '../data/fishTypes';
-import * as util from '../util';
+import * as util from '../util/util';
 import PondUserDao from '../dao/pondUserDao';
 import FishDao from '../dao/fishDao';
 
@@ -42,7 +42,7 @@ const mockFish: Fish = {
   expRewarded: 1,
   rarity: 'rare',
   secondsFishable: 1,
-  pond: 'Pond'
+  pond: 'Pond',
 };
 
 jest.spyOn(util, 'getRandomArrayElement').mockReturnValue(mockFish);
@@ -69,14 +69,14 @@ describe('Test pollFish', () => {
     const result = await fishingService.pollFish(1, 1, 2);
     expect(result).toStrictEqual(mockFishInstance);
   });
-  
+
   it('fish due time is expired', async () => {
     fishingService.nextFishDue.set(1, -999999);
     const result = await fishingService.pollFish(1, 1, 2);
     expect(fishingService.nextFishDue.get(1)).toBe(1000);
     expect(result).toBe(null);
   });
-  
+
   it('fish is due on time', async () => {
     fishingService.nextFishDue.set(1, -1);
     const result = await fishingService.pollFish(1, 1, 2);
@@ -99,7 +99,7 @@ describe('Test getFish', () => {
     const fish = await fishingService.getFish(1, 1, 1, 2);
     expect(fish).toStrictEqual(expectedResult);
   });
-  
+
   it('user does have current fish', async () => {
     const mockFishInstance = {
       ...mockFish,
@@ -110,7 +110,7 @@ describe('Test getFish', () => {
     const fish = await fishingService.getFish(1, 1, 1, 2);
     expect(fish).toBe(fishingService.userCurrentFish.get(1));
   });
-  
+
   it('user has invalid location', async () => {
     mockPondUserDao.getPondUser = jest.fn().mockResolvedValueOnce({
       id: 1,
@@ -152,8 +152,8 @@ describe('Test collectFish', () => {
         id: 1,
         pond_user_id: 1,
         count: 1,
-        length: 1
-      }
+        length: 1,
+      },
     ]);
     const mockFishInstance = {
       ...mockFish,
@@ -167,7 +167,7 @@ describe('Test collectFish', () => {
     expect(mockFishDao.updateFish).toHaveBeenCalledTimes(1);
     expect(mockFishDao.insertFish).toHaveBeenCalledTimes(0);
   });
-  
+
   it('user has no current fish', async () => {
     const result = await fishingService.collectFish(1);
     expect(result).toBe(null);
@@ -185,7 +185,7 @@ describe('Test getCurrentFish', () => {
     const result = fishingService.getCurrentFish(1);
     expect(result).toStrictEqual(mockFishInstance);
   });
-  
+
   it('user has expired fish', () => {
     const mockFishInstance = {
       ...mockFish,
@@ -196,7 +196,7 @@ describe('Test getCurrentFish', () => {
     const result = fishingService.getCurrentFish(1);
     expect(result).toBe(null);
   });
-  
+
   it('user has no fish', () => {
     const result = fishingService.getCurrentFish(1);
     expect(result).toBe(null);
@@ -208,7 +208,7 @@ describe('Test getLastConnectedSocketId', () => {
     const result = fishingService.updateConnectedSocketId(1, 1);
     expect(result).toBe(null);
   });
-  
+
   it('has existing socket io', () => {
     fishingService.connectedUsers.set(1, 1);
     const result = fishingService.updateConnectedSocketId(1, 1);

@@ -7,12 +7,15 @@ import knex from 'knex';
 import session from 'express-session';
 import fishingSocket from './sockets/fishing';
 import getAuthenticationRouter from './routers/authentication';
-import { isLoggedIn, setupAuth } from './middleware';
+import { isLoggedIn, setupAuth } from './util/middleware';
 import PondUserController from './controller/pondUserController';
 import FishingController from './controller/fishingController';
 import PondUserDao from './dao/pondUserDao';
 import FishDao from './dao/fishDao';
 import getUserRouter from './routers/user';
+import { pondUserLogger } from './util/logger';
+
+pondUserLogger.info('App start (test)');
 
 const app: Application = express();
 

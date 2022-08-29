@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { Strategy } from 'passport-google-oauth20';
 import passport from 'passport';
-import PondUser from './models/pondUserModel';
-import PondUserController from './controller/pondUserController';
+import PondUser from '../models/pondUserModel';
+import PondUserController from '../controller/pondUserController';
 
 export const isLoggedIn = (req: Request, res: Response, next: NextFunction) => {
   if (req.user) {

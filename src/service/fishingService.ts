@@ -5,7 +5,7 @@ import {
   getRandomRarity,
   randomNormal,
   sleep,
-} from '../util';
+} from '../util/util';
 import fishJson from '../data/fish.json';
 import PondUserDao from '../dao/pondUserDao';
 import FishDao from '../dao/fishDao';
@@ -24,9 +24,13 @@ interface FishInstance {
 
 export default class FishingService {
   readonly userCurrentFish = new Map<number, FishInstance>();
+
   readonly connectedUsers = new Map<number, number>();
+
   readonly nextFishDue = new Map<number, number>();
+
   readonly pondUserDao: PondUserDao;
+
   readonly fishDao: FishDao;
 
   constructor(pondUserDao: PondUserDao, fishDao: FishDao) {

@@ -6,6 +6,7 @@ import UserFish from '../models/userFishModel';
 
 class PondUserService {
   readonly pondUserDao: PondUserDao;
+
   readonly fishDao: FishDao;
 
   constructor(pondUserDao: PondUserDao, fishDao: FishDao) {

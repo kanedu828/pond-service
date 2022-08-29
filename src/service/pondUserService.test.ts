@@ -99,6 +99,3 @@ describe('test getUserFish', () => {
     expect(results).toBe(fishArray);
   });
 });
-
-
-

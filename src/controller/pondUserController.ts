@@ -6,7 +6,8 @@ import { Fish } from '../data/fishTypes';
 import PondUser from '../models/pondUserModel';
 import PondUserService from '../service/pondUserService';
 import fishJson from '../data/fish.json';
-import { binarySearch } from '../util';
+import { binarySearch } from '../util/util';
+import { pondUserLogger } from '../util/logger';
 
 class PondUserController {
   pondUserService: PondUserService;
@@ -34,6 +35,7 @@ class PondUserController {
         return pondUser;
       }
     } catch (err) {
+      pondUserLogger.error(err);
       console.error(err);
     }
     return null;
@@ -49,7 +51,7 @@ class PondUserController {
       const pondUser = await this.pondUserService.getPondUser(req.body.id);
       res.status(200).json(pondUser);
     } catch (err) {
-      console.error(err);
+      pondUserLogger.error(err);
       res.status(400).json(err);
     }
   }
@@ -64,7 +66,7 @@ class PondUserController {
       const pondUser = await this.pondUserService.getPondUser(id);
       return pondUser;
     } catch (err) {
-      console.error(err);
+      pondUserLogger.error(err);
     }
     return null;
   }
@@ -72,6 +74,7 @@ class PondUserController {
   async getUserFish(req: Request, res: Response): Promise<void> {
     const user: PondUser = req.user as PondUser;
     if (!user) {
+      pondUserLogger.error('User is not authenticated');
       res.status(401);
     }
     try {
@@ -85,10 +88,11 @@ class PondUserController {
         const fishData: Fish = fishJson[fishIndex];
         res.json({
           ...fish,
-          ...fishData
+          ...fishData,
         });
       });
     } catch (err) {
+      pondUserLogger.error(err);
       console.error(err);
       res.status(400).json(err);
     }

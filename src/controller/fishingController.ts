@@ -1,7 +1,8 @@
 import FishDao from '../dao/fishDao';
 import PondUserDao from '../dao/pondUserDao';
 import FishingService from '../service/fishingService';
-import { sleep } from '../util';
+import { fishingLogger } from '../util/logger';
+import { sleep } from '../util/util';
 
 class FishingController {
   fishingService: FishingService;
@@ -11,7 +12,8 @@ class FishingController {
   }
 
   /**
-   *
+   * This method is no longer used becasue of unreliablity with
+   * retrieving fish.
    * @param userId
    * @param low
    * @param high
@@ -21,6 +23,7 @@ class FishingController {
     try {
       return await this.fishingService.getFish(userId, socketId, 10, 30);
     } catch (err) {
+      fishingLogger.error(err);
       console.error(err);
     }
     return null;
@@ -31,11 +34,15 @@ class FishingController {
    * @param socket
    */
   async pollFish(socket: any) {
-    await sleep(10000);
-    const userId = socket.request.user.id;
-    const currentFish = await this.fishingService.pollFish(userId, 10, 30);
-    if (currentFish) {
-      socket.emit('new-fish', currentFish);
+    try {
+      await sleep(10000);
+      const userId = socket.request.user.id;
+      const currentFish = await this.fishingService.pollFish(userId, 10, 30);
+      if (currentFish) {
+        socket.emit('new-fish', currentFish);
+      }
+    } catch (err) {
+      fishingLogger.error(err);
     }
   }
 
@@ -44,37 +51,48 @@ class FishingController {
    * @param userId
    * @returns
    */
-  async collectFish(userId: number) {
+  async collectFish(socket: any) {
     try {
-      return await this.fishingService.collectFish(userId);
+      const userId = socket.request.user.id;
+      const collectedFish = await this.fishingService.collectFish(userId);
+      socket.emit('caught-fish', collectedFish);
     } catch (err) {
+      fishingLogger.error(err);
       console.error(err);
     }
-    return null;
   }
 
-  getCurrentFish(userId: number) {
+  getCurrentFish(socket: any) {
     try {
-      return this.fishingService.getCurrentFish(userId);
+      const userId = socket.request.user.id;
+      const currentFish = this.fishingService.getCurrentFish(userId);
+      if (currentFish) {
+        socket.emit('new-fish', currentFish);
+      }
     } catch (err) {
+      fishingLogger.error(err);
       console.error(err);
     }
-    return null;
   }
 
-  updateConnectedSocketId(userId: number, socketId: number) {
+  updateConnectedSocketId(socket: any) {
     try {
+      const userId = socket.request.user.id;
+      const socketId = socket.id;
       return this.fishingService.updateConnectedSocketId(userId, socketId);
     } catch (err) {
+      fishingLogger.error(err);
       console.error(err);
     }
     return null;
   }
 
-  getConnectedSocketId(userId: number) {
+  getConnectedSocketId(socket: any) {
     try {
+      const userId = socket.request.user.id;
       return this.fishingService.getConnectSocketId(userId);
     } catch (err) {
+      fishingLogger.error(err);
       console.error(err);
     }
     return null;

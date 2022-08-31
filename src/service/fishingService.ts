@@ -159,14 +159,14 @@ export default class FishingService {
           },
           {
             count: sameFish.count + 1,
-            length: Math.max(collectedFish.length, sameFish.length),
+            max_length: Math.max(collectedFish.length, sameFish.max_length),
           }
         );
       } else {
         await this.fishDao.insertFish({
           fish_id: collectedFish.id,
           pond_user_id: userId,
-          length: collectedFish.length,
+          max_length: collectedFish.length,
           count: 1,
         });
       }

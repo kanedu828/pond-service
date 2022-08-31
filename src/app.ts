@@ -15,7 +15,6 @@ import FishDao from './dao/fishDao';
 import getUserRouter from './routers/user';
 import { pondUserLogger } from './util/logger';
 
-pondUserLogger.info('App start (test)');
 
 const app: Application = express();
 
@@ -74,3 +73,5 @@ app.use('/auth', getAuthenticationRouter());
 app.use('/user', getUserRouter(pondUserController));
 
 server.listen(5000, () => console.log('Server Running'));
+
+pondUserLogger.info('Pond Service Start');

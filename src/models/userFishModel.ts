@@ -2,7 +2,7 @@ interface UserFish {
   fishId: number;
   pondUserId: number;
   count: number;
-  length: number;
+  maxLength: number;
 }
 
 export default UserFish;

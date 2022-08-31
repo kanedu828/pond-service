@@ -64,7 +64,7 @@ class PondUserService {
     const userFishArr = result.map((element: any) => {
       const userFish: UserFish = {
         fishId: element.fish_id,
-        length: element.length,
+        maxLength: element.max_length,
         count: element.count,
         pondUserId: element.pond_user_id,
       };

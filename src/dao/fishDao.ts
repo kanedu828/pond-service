@@ -1,13 +1,13 @@
 interface FishColumns {
   id?: number;
   fish_id?: number;
-  length?: number;
+  max_length?: number;
   pond_user_id?: number;
   count?: number;
 }
 
 const allColumns = [
-  'length',
+  'max_length',
   'fish_id',
   'pond_user_id',
   'created_at',

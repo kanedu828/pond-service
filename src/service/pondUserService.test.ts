@@ -85,14 +85,14 @@ describe('test getUserFish', () => {
         id: 1,
         fish_id: 1,
         pond_user_id: 1,
-        length: 10,
+        max_length: 10,
         count: 5,
       },
       {
         id: 2,
         fish_id: 2,
         pond_user_id: 1,
-        length: 5,
+        max_length: 5,
         count: 2,
       },
     ];
@@ -100,13 +100,13 @@ describe('test getUserFish', () => {
       {
         fishId: 1,
         pondUserId: 1,
-        length: 10,
+        maxLength: 10,
         count: 5,
       },
       {
         fishId: 2,
         pondUserId: 1,
-        length: 5,
+        maxLength: 5,
         count: 2,
       },
     ];

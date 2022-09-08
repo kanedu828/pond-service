@@ -34,9 +34,7 @@ test('validate fish json data', () => {
       throw new Error(`Fish id ${element.id} does not have an active property`);
     }
     if (element.lengthRangeInCm.length !== 2) {
-      throw new Error(
-        `Fish id ${element.id} lengthRangeInCm array is not of length 2`
-      );
+      throw new Error(`Fish id ${element.id} lengthRangeInCm array is not of length 2`);
     }
     if (
       element.rarity !== 'common' &&
@@ -51,7 +49,7 @@ test('validate fish json data', () => {
     return element.id;
   };
   let lastId = -1;
-  fishJson.forEach(fish => {
+  fishJson.forEach((fish) => {
     lastId = validateFish(fish, lastId);
   });
 });

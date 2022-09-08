@@ -8,7 +8,7 @@ const mockUser = {
   email: 'test@example.com',
   google_id: 'my-google-id',
   exp: 1,
-  location: 'default',
+  location: 'default'
 };
 
 jest.mock('../dao/pondUserDao');
@@ -18,14 +18,14 @@ const mockPondUserDao: jest.Mocked<PondUserDao> = {
   getPondUser: jest.fn(),
   insertPondUser: jest.fn(),
   updatePondUser: jest.fn(),
-  incrementPondUserExp: jest.fn(),
+  incrementPondUserExp: jest.fn()
 };
 
 const mockFishDao: jest.Mocked<FishDao> = {
   db: jest.fn(),
   getFish: jest.fn(),
   updateFish: jest.fn(),
-  insertFish: jest.fn(),
+  insertFish: jest.fn()
 };
 
 const pondUserService = new PondUserService(mockPondUserDao, mockFishDao);
@@ -46,14 +46,11 @@ describe('Test getOrCreatePondUser', () => {
       email: 'test@example.com',
       googleId: 'my-google-id',
       exp: 1,
-      location: 'default',
+      location: 'default'
     };
     mockPondUserDao.getPondUser.mockResolvedValueOnce(mockUser);
     mockPondUserDao.insertPondUser.mockResolvedValueOnce(mockUser);
-    const results = await pondUserService.getOrCreatePondUser(
-      'my-google-id',
-      'test@example.com'
-    );
+    const results = await pondUserService.getOrCreatePondUser('my-google-id', 'test@example.com');
     expect(results).toStrictEqual(expectedUser);
     expect(mockPondUserDao.insertPondUser).toHaveBeenCalledTimes(0);
   });
@@ -65,14 +62,11 @@ describe('Test getOrCreatePondUser', () => {
       email: 'test@example.com',
       googleId: 'my-google-id',
       exp: 1,
-      location: 'default',
+      location: 'default'
     };
     mockPondUserDao.getPondUser.mockResolvedValueOnce(null);
     mockPondUserDao.insertPondUser.mockResolvedValueOnce(mockUser);
-    const results = await pondUserService.getOrCreatePondUser(
-      'my-google-id',
-      'test@example.com'
-    );
+    const results = await pondUserService.getOrCreatePondUser('my-google-id', 'test@example.com');
     expect(results).toStrictEqual(expectedUser);
     expect(mockPondUserDao.insertPondUser).toHaveBeenCalledTimes(1);
   });
@@ -86,29 +80,29 @@ describe('test getUserFish', () => {
         fish_id: 1,
         pond_user_id: 1,
         max_length: 10,
-        count: 5,
+        count: 5
       },
       {
         id: 2,
         fish_id: 2,
         pond_user_id: 1,
         max_length: 5,
-        count: 2,
-      },
+        count: 2
+      }
     ];
     const expectedFishArray = [
       {
         fishId: 1,
         pondUserId: 1,
         maxLength: 10,
-        count: 5,
+        count: 5
       },
       {
         fishId: 2,
         pondUserId: 1,
         maxLength: 5,
-        count: 2,
-      },
+        count: 2
+      }
     ];
     mockFishDao.getFish.mockResolvedValueOnce(fishArray);
     const results = await pondUserService.getUserFish(1);

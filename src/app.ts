@@ -15,20 +15,19 @@ import FishDao from './dao/fishDao';
 import getUserRouter from './routers/user';
 import { pondUserLogger } from './util/logger';
 
-
 const app: Application = express();
 
 app.use(
   cors({
     origin: ['http://127.0.0.1:3000'],
-    credentials: true,
+    credentials: true
   })
 );
 
 const sessionMiddleware = session({
   secret: 'keyboard cat',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: true
 });
 
 // App middleware
@@ -39,7 +38,7 @@ app.use(passport.session());
 // -------DB, DAO, Service, and Controller Initialization-------
 const db = knex({
   client: 'pg',
-  connection: process.env.PSQL_CONNECTION_STRING,
+  connection: process.env.PSQL_CONNECTION_STRING
 });
 
 const pondUserDao = new PondUserDao(db);
@@ -54,13 +53,12 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: ['http://127.0.0.1:3000'],
-    credentials: true,
-  },
+    credentials: true
+  }
 });
 
 // Socket io middleware
-const wrap = (middleware: any) => (socket: any, next: any) =>
-  middleware(socket.request, {}, next);
+const wrap = (middleware: any) => (socket: any, next: any) => middleware(socket.request, {}, next);
 
 io.use(wrap(sessionMiddleware));
 io.use(wrap(passport.initialize()));

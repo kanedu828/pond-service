@@ -22,19 +22,16 @@ class PondUserService {
    * @param email
    * @returns A pond user
    */
-  async getOrCreatePondUser(
-    googleId: string,
-    email: string
-  ): Promise<Express.User> {
+  async getOrCreatePondUser(googleId: string, email: string): Promise<Express.User> {
     let result = await this.pondUserDao.getPondUser({
-      google_id: googleId,
+      google_id: googleId
     });
     if (!result) {
       const randomUsername = `guest-${randomBytes(48).toString('hex')}`;
       result = await this.pondUserDao.insertPondUser({
         email,
         google_id: googleId,
-        username: randomUsername,
+        username: randomUsername
       });
     }
     const pondUser: PondUser = {
@@ -43,7 +40,7 @@ class PondUserService {
       email: result.email,
       googleId: result.google_id,
       exp: result.exp,
-      location: result.location,
+      location: result.location
     };
     return pondUser;
   }
@@ -66,7 +63,7 @@ class PondUserService {
         fishId: element.fish_id,
         maxLength: element.max_length,
         count: element.count,
-        pondUserId: element.pond_user_id,
+        pondUserId: element.pond_user_id
       };
       return userFish;
     });

@@ -3,11 +3,13 @@ import { Strategy } from 'passport-google-oauth20';
 import passport from 'passport';
 import PondUser from '../models/pondUserModel';
 import PondUserController from '../controller/pondUserController';
+import { pondUserLogger } from './logger';
 
 export const isLoggedIn = (req: Request, res: Response, next: NextFunction) => {
   if (req.user) {
     next();
   } else {
+    pondUserLogger.error('User is not authenticated');
     next(new Error('unauthorized'));
   }
 };
@@ -31,7 +33,7 @@ export const setupAuth = (pondUserController: PondUserController) => {
         clientID: process.env.GOOGLE_CLIENT_ID ?? '',
         clientSecret: process?.env?.GOOGLE_CLIENT_SECRET ?? '',
         callbackURL: `${process?.env?.URL ?? ''}/auth/google/callback`,
-        passReqToCallback: true,
+        passReqToCallback: true
       },
       async (request, _accessToken, _refreshToken, profile, done) => {
         const pondUser = await pondUserController.getOrCreatePondUser(profile);

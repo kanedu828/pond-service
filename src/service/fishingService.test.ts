@@ -10,7 +10,7 @@ const mockUser = {
   email: 'test@example.com',
   googleId: 'my-google-id',
   exp: 1,
-  location: 'Pond',
+  location: 'Pond'
 };
 
 jest.mock('../dao/pondUserDao');
@@ -20,7 +20,7 @@ const mockPondUserDao: jest.Mocked<PondUserDao> = {
   getPondUser: jest.fn().mockResolvedValue(mockUser),
   insertPondUser: jest.fn(),
   updatePondUser: jest.fn(),
-  incrementPondUserExp: jest.fn(),
+  incrementPondUserExp: jest.fn()
 };
 
 jest.mock('../dao/fishDao');
@@ -29,7 +29,7 @@ const mockFishDao: jest.Mocked<FishDao> = {
   db: jest.fn(),
   getFish: jest.fn(),
   insertFish: jest.fn(),
-  updateFish: jest.fn(),
+  updateFish: jest.fn()
 };
 
 const fishingService = new FishingService(mockPondUserDao, mockFishDao);
@@ -42,7 +42,7 @@ const mockFish: Fish = {
   expRewarded: 1,
   rarity: 'rare',
   secondsFishable: 1,
-  active: true,
+  active: true
 };
 
 jest.spyOn(util, 'getRandomArrayElement').mockReturnValue(mockFish);
@@ -63,7 +63,7 @@ describe('Test pollFish', () => {
     const mockFishInstance = {
       ...mockFish,
       length: 2,
-      expirationDate: 1000,
+      expirationDate: 1000
     };
     fishingService.userCurrentFish.set(1, mockFishInstance);
     const result = await fishingService.pollFish(1, 1, 2);
@@ -83,7 +83,7 @@ describe('Test pollFish', () => {
     const mockFishInstance = {
       ...mockFish,
       length: 2,
-      expirationDate: 1000,
+      expirationDate: 1000
     };
     expect(result).toStrictEqual(mockFishInstance);
   });
@@ -94,7 +94,7 @@ describe('Test getFish', () => {
     const expectedResult = {
       ...mockFish,
       expirationDate: 1000,
-      length: 2,
+      length: 2
     };
     const fish = await fishingService.getFish(1, 1, 1, 2);
     expect(fish).toStrictEqual(expectedResult);
@@ -104,7 +104,7 @@ describe('Test getFish', () => {
     const mockFishInstance = {
       ...mockFish,
       length: 2,
-      expirationDate: 1000,
+      expirationDate: 1000
     };
     fishingService.userCurrentFish.set(1, mockFishInstance);
     const fish = await fishingService.getFish(1, 1, 1, 2);
@@ -118,12 +118,12 @@ describe('Test getFish', () => {
       email: 'test@example.com',
       googleId: 'my-google-id',
       exp: 1,
-      location: 'asdfasdf',
+      location: 'asdfasdf'
     });
     const expectedResult = {
       ...mockFish,
       expirationDate: 1000,
-      length: 2,
+      length: 2
     };
     const fish = await fishingService.getFish(1, 1, 1, 2);
     expect(fish).toStrictEqual(expectedResult);
@@ -136,7 +136,7 @@ describe('Test collectFish', () => {
     const mockFishInstance = {
       ...mockFish,
       length: 2,
-      expirationDate: 1000,
+      expirationDate: 1000
     };
     fishingService.userCurrentFish.set(1, mockFishInstance);
     const result = await fishingService.collectFish(1);
@@ -152,13 +152,13 @@ describe('Test collectFish', () => {
         id: 1,
         pond_user_id: 1,
         count: 1,
-        length: 1,
-      },
+        length: 1
+      }
     ]);
     const mockFishInstance = {
       ...mockFish,
       length: 2,
-      expirationDate: 1000,
+      expirationDate: 1000
     };
     fishingService.userCurrentFish.set(1, mockFishInstance);
     const result = await fishingService.collectFish(1);
@@ -179,7 +179,7 @@ describe('Test getCurrentFish', () => {
     const mockFishInstance = {
       ...mockFish,
       length: 2,
-      expirationDate: 1000,
+      expirationDate: 1000
     };
     fishingService.userCurrentFish.set(1, mockFishInstance);
     const result = fishingService.getCurrentFish(1);
@@ -190,7 +190,7 @@ describe('Test getCurrentFish', () => {
     const mockFishInstance = {
       ...mockFish,
       length: 2,
-      expirationDate: -1000,
+      expirationDate: -1000
     };
     fishingService.userCurrentFish.set(1, mockFishInstance);
     const result = fishingService.getCurrentFish(1);

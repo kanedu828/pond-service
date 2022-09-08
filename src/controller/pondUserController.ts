@@ -28,10 +28,7 @@ class PondUserController {
       if (!email) {
         throw new Error('Google Id does not have an associated email');
       } else {
-        const pondUser = await this.pondUserService.getOrCreatePondUser(
-          profile.id,
-          email
-        );
+        const pondUser = await this.pondUserService.getOrCreatePondUser(profile.id, email);
         return pondUser;
       }
     } catch (err) {
@@ -93,16 +90,12 @@ class PondUserController {
     }
     try {
       const userFish = await this.pondUserService.getUserFish(user.id);
-      const userFishRes = userFish.map(fish => {
-        const fishIndex = binarySearch<Fish>(
-          fishJson,
-          fish.fishId,
-          (element: Fish) => element.id
-        );
+      const userFishRes = userFish.map((fish) => {
+        const fishIndex = binarySearch<Fish>(fishJson, fish.fishId, (element: Fish) => element.id);
         const fishData: Fish = fishJson[fishIndex];
         return {
           ...fish,
-          ...fishData,
+          ...fishData
         };
       });
       res.json(userFishRes);

@@ -23,24 +23,19 @@ class PondUserDao {
   }
 
   async insertPondUser(columns: PondUserColumns) {
-    const pondUser = await this.db('pond_user')
-      .returning(allColumns)
-      .insert(columns);
+    const pondUser = await this.db('pond_user').returning(allColumns).insert(columns);
     return pondUser[0];
   }
 
   async updatePondUser(key: PondUserColumns, columns: PondUserColumns) {
-    const pondUser = await this.db('pond_user')
-      .returning(allColumns)
-      .where(key)
-      .update(columns);
+    const pondUser = await this.db('pond_user').returning(allColumns).where(key).update(columns);
     return pondUser[0];
   }
 
   async incrementPondUserExp(id: number, inc: number) {
     const pondUser = await this.db('pond_user')
       .where({
-        id,
+        id
       })
       .increment('exp', inc)
       .returning(allColumns);

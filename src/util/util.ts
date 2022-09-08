@@ -2,7 +2,7 @@ export const getRandomInt = (min: number, max: number): number =>
   Math.floor(Math.random() * (max - min + 1) + min);
 
 export const sleep = (milliseconds: number) =>
-  new Promise(resolve => setTimeout(resolve, milliseconds));
+  new Promise((resolve) => setTimeout(resolve, milliseconds));
 
 // Code from stack overflow to give random value based off of a
 // normal distribution. Used to get random lenght of fish.
@@ -14,8 +14,7 @@ export const randomNormal = (min: number, max: number) => {
   let num = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
 
   num = num / 10.0 + 0.5; // Translate to 0 -> 1
-  if (num > 1 || num < 0)
-    num = randomNormal(min, max); // resample between 0 and 1 if out of range
+  if (num > 1 || num < 0) num = randomNormal(min, max); // resample between 0 and 1 if out of range
   else {
     num *= max - min; // Stretch to fill range
     num += min; // offset to min

@@ -1,7 +1,7 @@
 import { Knex } from 'knex';
 
 export async function up(knex: Knex): Promise<void> {
-  return knex.schema.createTable('pond_user', table => {
+  return knex.schema.createTable('pond_user', (table) => {
     table.increments();
     table.string('email').unique().notNullable();
     table.string('google_id').unique().notNullable();

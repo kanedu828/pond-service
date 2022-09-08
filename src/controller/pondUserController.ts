@@ -71,6 +71,20 @@ class PondUserController {
     return null;
   }
 
+  async updateUserLocation(req: Request, res: Response): Promise<void> {
+    const user: PondUser = req.user as PondUser;
+    try {
+      if (!req.params.location) {
+        throw new Error('No location paramter in request');
+      }
+      const pondUser = await this.pondUserService.updateUserLocation(user.id, req.params.location);
+      res.status(200).json(pondUser);
+    } catch (err) {
+      pondUserLogger.error(err);
+      res.status(400).json(err);
+    }
+  }
+
   async getUserFish(req: Request, res: Response): Promise<void> {
     const user: PondUser = req.user as PondUser;
     if (!user) {

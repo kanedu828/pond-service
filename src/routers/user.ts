@@ -15,6 +15,10 @@ const getUserRouter = (pondUserController: PondUserController) => {
     await pondUserController.getUserFish(req, res);
   });
 
+  router.post('/update-location/:location', async (req: Request, res: Response) => {
+    await pondUserController.updateUserLocation(req, res);
+  });
+
   return router;
 };
 

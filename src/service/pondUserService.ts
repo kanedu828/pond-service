@@ -72,6 +72,11 @@ class PondUserService {
     });
     return userFishArr;
   }
+
+  async updateUserLocation(id: number, pond: string): Promise<PondUser> {
+    const result = await this.pondUserDao.updatePondUser({ id }, { location: pond });
+    return result;
+  }
 }
 
 export default PondUserService;

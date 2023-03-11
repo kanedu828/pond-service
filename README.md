@@ -1,7 +1,7 @@
 ## Pond-Service
 
 ### Development
-
+`$ npm run dev`
 ### Migrations
 
 To migrate to the latest:

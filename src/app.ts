@@ -17,9 +17,11 @@ import { pondUserLogger } from './util/logger';
 
 const app: Application = express();
 
+const web_url: string = process.env.WEB_URL ?? '';
+
 app.use(
   cors({
-    origin: ['http://127.0.0.1:3000'],
+    origin: [web_url],
     credentials: true
   })
 );
@@ -52,7 +54,7 @@ setupAuth(pondUserController);
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ['http://127.0.0.1:3000'],
+    origin: [web_url],
     credentials: true
   }
 });

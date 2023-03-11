@@ -1,6 +1,8 @@
 import { Router, Request, Response } from 'express';
 import passport from 'passport';
 
+const web_url = process.env.WEB_URL ?? '';
+
 const getAuthenticationRouter = () => {
   const router: any = Router();
 
@@ -15,7 +17,7 @@ const getAuthenticationRouter = () => {
   router.get(
     '/google/callback',
     passport.authenticate('google', {
-      successRedirect: 'http://127.0.0.1:3000'
+      successRedirect: web_url
     })
   );
 

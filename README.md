@@ -2,6 +2,7 @@
 
 ### Development
 `$ npm run dev`
+`$ npm test`
 ### Migrations
 
 To migrate to the latest:

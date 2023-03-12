@@ -1,4 +1,7 @@
 {
+  "engines" : {
+    "node": "16.x"
+  },
   "name": "pond-service",
   "version": "0.0.1",
   "description": "Backend service for pond",

@@ -18,11 +18,7 @@ const config: { [key: string]: Knex.Config } = {
 
   staging: {
     client: 'postgresql',
-    connection: {
-      database: 'pond-db',
-      user: 'username',
-      password: 'password'
-    },
+    connection: process.env.PSQL_CONNECTION_STRING,
     pool: {
       min: 2,
       max: 10
@@ -34,11 +30,7 @@ const config: { [key: string]: Knex.Config } = {
 
   production: {
     client: 'postgresql',
-    connection: {
-      database: 'pond-db',
-      user: 'username',
-      password: 'password'
-    },
+    connection: process.env.PSQL_CONNECTION_STRING,
     pool: {
       min: 2,
       max: 10
@@ -46,7 +38,7 @@ const config: { [key: string]: Knex.Config } = {
     migrations: {
       tableName: 'knex_migrations'
     }
-  }
+  },
 };
 
 module.exports = config;

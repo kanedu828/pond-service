@@ -1,6 +1,6 @@
 {
   "engines" : {
-    "node": "16.x"
+    "npm": "~1.0.20"
   },
   "name": "pond-service",
   "version": "0.0.1",

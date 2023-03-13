@@ -40,7 +40,8 @@ app.use(passport.session());
 // -------DB, DAO, Service, and Controller Initialization-------
 const db = knex({
   client: 'pg',
-  connection: process.env.PSQL_CONNECTION_STRING
+  connection: process.env.PSQL_CONNECTION_STRING,
+  pool: { min: 0, max: 7 }
 });
 
 const pondUserDao = new PondUserDao(db);

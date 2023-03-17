@@ -32,7 +32,7 @@ export const setupAuth = (pondUserController: PondUserController) => {
       {
         clientID: process.env.GOOGLE_CLIENT_ID ?? '',
         clientSecret: process?.env?.GOOGLE_CLIENT_SECRET ?? '',
-        callbackURL: `${process?.env?.POND_SERVICE_URL ?? ''}:${process?.env?.POND_SERVICE_PORT}/auth/google/callback`,
+        callbackURL: `${process?.env?.POND_SERVICE_URL ?? ''}/auth/google/callback`,
         passReqToCallback: true
       },
       async (_request, _accessToken, _refreshToken, profile, done) => {

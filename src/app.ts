@@ -17,11 +17,12 @@ import { pondUserLogger } from './util/logger';
 
 const app: Application = express();
 
-const web_url: string = process.env.WEB_URL ?? '';
+const POND_WEB_URL: string = process.env.POND_WEB_URL ?? '';
+const POND_SERVICE_PORT: string = process.env.POND_SERVICE_PORT ?? '';
 
 app.use(
   cors({
-    origin: [web_url],
+    origin: [POND_WEB_URL],
     credentials: true
   })
 );
@@ -55,7 +56,7 @@ setupAuth(pondUserController);
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: [web_url],
+    origin: [POND_WEB_URL],
     credentials: true
   }
 });
@@ -73,6 +74,6 @@ fishingSocket(io, fishingController);
 app.use('/auth', getAuthenticationRouter());
 app.use('/user', getUserRouter(pondUserController));
 
-server.listen(5000, () => console.log('Server Running'));
+server.listen(POND_SERVICE_PORT, () => console.log('Server Running'));
 
 pondUserLogger.info('Pond Service Start');

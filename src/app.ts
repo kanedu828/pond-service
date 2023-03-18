@@ -14,12 +14,20 @@ import PondUserDao from './dao/pondUserDao';
 import FishDao from './dao/fishDao';
 import getUserRouter from './routers/user';
 import { pondUserLogger } from './util/logger';
+import cookieSession from 'cookie-session';
 
 const app: Application = express();
 
 const POND_WEB_URL: string = process.env.POND_WEB_URL ?? '';
 const POND_SERVICE_PORT: string = process.env.POND_SERVICE_PORT ?? '';
 const SESSION_SECRET: string = process.env.SESSION_SECRET ?? '';
+const COOKIE_SECRET: string = process.env.COOKIE_SECRET ?? '';
+
+app.use(cookieSession({
+  name: 'pondSession',
+  secret: COOKIE_SECRET,
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}));
 
 app.use(
   cors({

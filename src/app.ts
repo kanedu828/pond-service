@@ -38,6 +38,7 @@ const sessionMiddleware = session({
 app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
+app.enable('trust proxy');
 
 // -------DB, DAO, Service, and Controller Initialization-------
 const db = knex({

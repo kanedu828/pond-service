@@ -45,6 +45,7 @@ const db = knex({
   connection: {
     connectionString: process.env.PSQL_CONNECTION_STRING,
     ssl: {
+      rejectUnauthorized: true,
       ca: process.env.CA_CERT || '',
     }
   },

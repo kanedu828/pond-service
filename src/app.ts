@@ -44,10 +44,6 @@ const db = knex({
   client: 'pg',
   connection: {
     connectionString: process.env.PSQL_CONNECTION_STRING,
-    ssl: {
-      rejectUnauthorized: false,
-      ca: process.env.CA_CERT || '',
-    }
   },
   pool: { min: 0, max: 7 },
 });

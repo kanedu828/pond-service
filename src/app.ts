@@ -19,6 +19,7 @@ const app: Application = express();
 
 const POND_WEB_URL: string = process.env.POND_WEB_URL ?? '';
 const POND_SERVICE_PORT: string = process.env.POND_SERVICE_PORT ?? '';
+const SESSION_SECRET: string = process.env.SESSION_SECRET ?? '';
 
 app.use(
   cors({
@@ -28,7 +29,7 @@ app.use(
 );
 
 const sessionMiddleware = session({
-  secret: 'keyboard cat',
+  secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: true
 });

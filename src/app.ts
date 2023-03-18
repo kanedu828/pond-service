@@ -28,11 +28,21 @@ app.use(
   })
 );
 
-const sessionMiddleware = session({
+let sessionConfig = {
   secret: SESSION_SECRET,
   resave: false,
-  saveUninitialized: true
-});
+  saveUninitialized: true,
+  cookie: {
+    secure: false
+  },
+}
+
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1) // trust first proxy
+  sessionConfig.cookie.secure = true // serve secure cookies
+}
+
+const sessionMiddleware = session(sessionConfig);
 
 // App middleware
 app.use(sessionMiddleware);

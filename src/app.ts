@@ -79,7 +79,6 @@ const io = new Server(server, {
   cors: {
     origin: [POND_WEB_URL],
     credentials: true,
-    methods: ["GET", "POST"]
   }
 });
 

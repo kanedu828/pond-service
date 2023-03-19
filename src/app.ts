@@ -5,6 +5,7 @@ import passport from 'passport';
 import cors from 'cors';
 import knex from 'knex';
 import session from 'express-session';
+import KnexSessionStore from 'connect-session-knex';
 import fishingSocket from './sockets/fishing';
 import getAuthenticationRouter from './routers/authentication';
 import { isLoggedIn, setupAuth } from './util/middleware';
@@ -15,12 +16,12 @@ import FishDao from './dao/fishDao';
 import getUserRouter from './routers/user';
 import { pondUserLogger } from './util/logger';
 
-const app: Application = express();
-
+// ----------- Env Variables ----------------
 const POND_WEB_URL: string = process.env.POND_WEB_URL ?? '';
 const POND_SERVICE_PORT: string = process.env.POND_SERVICE_PORT ?? '';
 const SESSION_SECRET: string = process.env.SESSION_SECRET ?? '';
 
+const app: Application = express();
 app.use(
   cors({
     origin: [POND_WEB_URL],
@@ -28,41 +29,48 @@ app.use(
   })
 );
 
-let sessionConfig = {
+// -------DB Initialization-------
+const db = knex({
+  client: 'pg',
+  connection: {
+    connectionString: process.env.PSQL_CONNECTION_STRING
+  },
+  pool: { min: 0, max: 7 }
+});
+
+// --------- Knex Session Storage Setup --------------
+const ExpressSessionKnexSessionStore = KnexSessionStore(session);
+const sessionStorage = new ExpressSessionKnexSessionStore({ knex: db });
+
+// -------- Express Session Setup -----------
+const sessionConfig = {
   secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: {
-    secure: false
+    secure: false,
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
   },
-}
+  store: sessionStorage
+};
 
 if (app.get('env') === 'production') {
-  app.set('trust proxy', 1) // trust first proxy
-  sessionConfig.cookie.secure = true // serve secure cookies
+  app.set('trust proxy', 1); // trust first proxy
+  sessionConfig.cookie.secure = true; // serve secure cookies
 }
 
 const sessionMiddleware = session(sessionConfig);
 
-// App middleware
+// -------------- App middleware -----------------------
 app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
 
-// -------DB, DAO, Service, and Controller Initialization-------
-const db = knex({
-  client: 'pg',
-  connection: {
-    connectionString: process.env.PSQL_CONNECTION_STRING,
-  },
-  pool: { min: 0, max: 7 },
-});
-
+// ----------- Dao and controller setup ---------------
 const pondUserDao = new PondUserDao(db);
 const fishDao = new FishDao(db);
 const pondUserController = new PondUserController(pondUserDao, fishDao);
 const fishingController = new FishingController(pondUserDao, fishDao);
-// ------------------------------------------------------------
 
 setupAuth(pondUserController);
 

@@ -33,7 +33,7 @@ const config: { [key: string]: Knex.Config } = {
     connection: {
       connectionString: process.env.PSQL_CONNECTION_STRING,
       ssl: {
-        ca: process.env.CA_CERT,
+        ca: process.env.CA_CERT
       }
     },
     pool: {
@@ -43,7 +43,7 @@ const config: { [key: string]: Knex.Config } = {
     migrations: {
       tableName: 'knex_migrations'
     }
-  },
+  }
 };
 
 module.exports = config;

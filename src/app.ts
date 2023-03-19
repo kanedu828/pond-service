@@ -1,5 +1,5 @@
 import express, { Application } from 'express';
-import http from 'http';
+import https from 'https';
 import { Server } from 'socket.io';
 import passport from 'passport';
 import cors from 'cors';
@@ -74,7 +74,7 @@ const fishingController = new FishingController(pondUserDao, fishDao);
 
 setupAuth(pondUserController);
 
-const server = http.createServer(app);
+const server = https.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: [POND_WEB_URL],

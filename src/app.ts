@@ -79,7 +79,8 @@ const io = new Server(server, {
   cors: {
     origin: [POND_WEB_URL],
     credentials: true,
-  }
+  },
+  path: '/api'
 });
 
 // Socket io middleware

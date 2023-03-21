@@ -49,6 +49,7 @@ const sessionConfig = {
   saveUninitialized: true,
   cookie: {
     secure: false,
+    domain: POND_WEB_URL,
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   },
   store: sessionStorage

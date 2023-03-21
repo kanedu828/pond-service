@@ -49,6 +49,7 @@ const sessionConfig = {
   saveUninitialized: true,
   cookie: {
     secure: false,
+    domain: POND_WEB_URL,
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   },
   store: sessionStorage
@@ -62,6 +63,13 @@ if (app.get('env') === 'production') {
 const sessionMiddleware = session(sessionConfig);
 
 // -------------- App middleware -----------------------
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
+  next();
+});
 app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());

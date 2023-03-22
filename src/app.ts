@@ -32,7 +32,7 @@ app.use(
 // CORS Headers
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', POND_WEB_URL);
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Credentials', true);
   next();
 });
 

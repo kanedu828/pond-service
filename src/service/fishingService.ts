@@ -72,11 +72,11 @@ export default class FishingService {
   }
 
   /**
-   *
-   * @param userId
-   * @param low
-   * @param high
-   * @returns
+   * This function is deprecated.
+   * @param userId The user id to poll a fish for
+   * @param low The lower bound for possible due date for a fish in seconds
+   * @param high The higher bound for possible due date for a fish in seconds
+   * @returns null or fish instance
    */
   async getFish(userId: number, socketId: number, low: number, high: number) {
     const secondsUntilNextFish = getRandomInt(low, high);
@@ -105,13 +105,25 @@ export default class FishingService {
   }
 
   /**
-   *
-   * @param userId
+   * This function polls for a fish. If the user does not currently have a
+   * non-expired fish, this function decides the next date that the user is 
+   * due for a fish or randomly chooses a fish to return.
+   * @param userId The user id to poll a fish for
+   * @param low The lower bound for possible due date for a fish in seconds
+   * @param high The higher bound for possible due date for a fish in seconds
+   * @returns null or fish instance
    */
   async pollFish(userId: number, low: number, high: number) {
     if (!this.getCurrentFish(userId)) {
       const fishDue = this.nextFishDue.get(userId);
-      if (!fishDue || Date.now() > fishDue + 120000) {
+      
+      // If a fish is too far past its due date, the user should
+      // not be able to retrieve a fish. We set an aribrary buffer
+      // (eg. 2 minutes) where if a fish is too far past the due date,
+      // then we set a new due date rather than generate a fish.
+      const fishDueBuffer = 60 * 2 * 1000;
+      
+      if (!fishDue || Date.now() > fishDue + fishDueBuffer) {
         const secondsUntilNextFish = getRandomInt(low, high);
         this.nextFishDue.set(userId, Date.now() + secondsUntilNextFish * 1000);
       } else if (Date.now() > fishDue) {

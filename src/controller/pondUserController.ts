@@ -22,7 +22,7 @@ class PondUserController {
    * @param profile
    * @returns pondUser
    */
-  async getOrCreatePondUser(profile: Profile) {
+  async getOrCreatePondUser(profile: Profile): Promise<Express.User | null> {
     try {
       const email = profile.emails?.[0].value ?? null;
       if (!email) {
@@ -33,7 +33,6 @@ class PondUserController {
       }
     } catch (err) {
       pondUserLogger.error(err);
-      console.error(err);
     }
     return null;
   }
@@ -58,7 +57,7 @@ class PondUserController {
    * @param id
    * @returns
    */
-  async getPondUserById(id: number) {
+  async getPondUserById(id: number): Promise<Express.User | null> {
     try {
       const pondUser = await this.pondUserService.getPondUser(id);
       return pondUser;
@@ -101,7 +100,16 @@ class PondUserController {
       res.json(userFishRes);
     } catch (err) {
       pondUserLogger.error(err);
-      console.error(err);
+      res.status(400).json(err);
+    }
+  }
+
+  async getTopHundredPondUsersByExp(req: Request, res: Response): Promise<void> {
+    try {
+      const pondUsers = await this.pondUserService.getTopPondUsers('exp', 'desc', 100);
+      res.status(200).json(pondUsers);
+    } catch (err) {
+      pondUserLogger.error(err);
       res.status(400).json(err);
     }
   }

@@ -41,11 +41,11 @@ export default class FishingService {
   }
 
   /**
-   *
-   * @param location
-   * @returns
+   * Generates a fish of random rarity and type from the specified pond location
+   * @param location The pond to generate the fish from
+   * @returns FishInstance
    */
-  static generateFish(location: string) {
+  static generateFish(location: string): FishInstance {
     const rarity = getRandomRarity();
     const pond = pondJson.find((element) => element.name === location);
     if (!pond) {
@@ -78,7 +78,12 @@ export default class FishingService {
    * @param high The higher bound for possible due date for a fish in seconds
    * @returns null or fish instance
    */
-  async getFish(userId: number, socketId: number, low: number, high: number) {
+  async getFish(
+    userId: number,
+    socketId: number,
+    low: number,
+    high: number
+  ): Promise<FishInstance | null> {
     const secondsUntilNextFish = getRandomInt(low, high);
     await sleep(secondsUntilNextFish * 1000);
     const currentFish = this.getCurrentFish(userId);
@@ -106,23 +111,23 @@ export default class FishingService {
 
   /**
    * This function polls for a fish. If the user does not currently have a
-   * non-expired fish, this function decides the next date that the user is 
+   * non-expired fish, this function decides the next date that the user is
    * due for a fish or randomly chooses a fish to return.
    * @param userId The user id to poll a fish for
    * @param low The lower bound for possible due date for a fish in seconds
    * @param high The higher bound for possible due date for a fish in seconds
    * @returns null or fish instance
    */
-  async pollFish(userId: number, low: number, high: number) {
+  async pollFish(userId: number, low: number, high: number): Promise<FishInstance | null> {
     if (!this.getCurrentFish(userId)) {
       const fishDue = this.nextFishDue.get(userId);
-      
+
       // If a fish is too far past its due date, the user should
       // not be able to retrieve a fish. We set an aribrary buffer
       // (eg. 2 minutes) where if a fish is too far past the due date,
       // then we set a new due date rather than generate a fish.
       const fishDueBuffer = 60 * 2 * 1000;
-      
+
       if (!fishDue || Date.now() > fishDue + fishDueBuffer) {
         const secondsUntilNextFish = getRandomInt(low, high);
         this.nextFishDue.set(userId, Date.now() + secondsUntilNextFish * 1000);
@@ -145,11 +150,12 @@ export default class FishingService {
   }
 
   /**
-   *
+   * Collects the user's current fish and puts it in their collection.
+   * If there is no fish to collect, return null
    * @param userId
-   * @returns
+   * @returns FishInstance or null
    */
-  async collectFish(userId: number) {
+  async collectFish(userId: number): Promise<FishInstance | null> {
     const collectedFish: FishInstance | null = this.getCurrentFish(userId);
     if (collectedFish) {
       const fishQuery = await this.fishDao.getFish({
@@ -185,11 +191,11 @@ export default class FishingService {
   }
 
   /**
-   *
-   * @param userId
-   * @returns
+   * Gets the current fish that is being sent to the user
+   * @param userId The user Id
+   * @returns Fish Instance or null
    */
-  getCurrentFish(userId: number) {
+  getCurrentFish(userId: number): FishInstance | null {
     const currentFishInstance = this.userCurrentFish.get(userId) || null;
     if (currentFishInstance && currentFishInstance.expirationDate < Date.now()) {
       this.userCurrentFish.delete(userId);
@@ -199,18 +205,23 @@ export default class FishingService {
   }
 
   /**
-   *
-   * @param userId
-   * @param socketId
-   * @returns
+   * Sets the current socket id associated with the user
+   * @param userId The user ID
+   * @param socketId The socket ID
+   * @returns number or null
    */
-  updateConnectedSocketId(userId: number, socketId: number) {
+  updateConnectedSocketId(userId: number, socketId: number): number | null {
     const lastSocketId = this.connectedUsers.get(userId) || null;
     this.connectedUsers.set(userId, socketId);
     return lastSocketId;
   }
 
-  getConnectSocketId(userId: number) {
+  /**
+   * Gets the current socket associated to the user
+   * @param userId The user ID
+   * @returns number or null
+   */
+  getConnectSocketId(userId: number): number | null {
     return this.connectedUsers.get(userId) || null;
   }
 }

@@ -24,7 +24,6 @@ class FishingController {
       return await this.fishingService.getFish(userId, socketId, 10, 30);
     } catch (err) {
       fishingLogger.error(err);
-      console.error(err);
     }
     return null;
   }
@@ -59,7 +58,6 @@ class FishingController {
       socket.emit('caught-fish', collectedFish);
     } catch (err) {
       fishingLogger.error(err);
-      console.error(err);
     }
   }
 
@@ -72,7 +70,6 @@ class FishingController {
       }
     } catch (err) {
       fishingLogger.error(err);
-      console.error(err);
     }
   }
 
@@ -83,7 +80,6 @@ class FishingController {
       return this.fishingService.updateConnectedSocketId(userId, socketId);
     } catch (err) {
       fishingLogger.error(err);
-      console.error(err);
     }
     return null;
   }
@@ -94,7 +90,6 @@ class FishingController {
       return this.fishingService.getConnectSocketId(userId);
     } catch (err) {
       fishingLogger.error(err);
-      console.error(err);
     }
     return null;
   }

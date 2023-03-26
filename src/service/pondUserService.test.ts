@@ -5,8 +5,6 @@ import FishDao from '../dao/fishDao';
 const mockUser = {
   id: 123,
   username: 'test-user',
-  email: 'test@example.com',
-  google_id: 'my-google-id',
   exp: 1,
   location: 'default'
 };
@@ -18,7 +16,8 @@ const mockPondUserDao: jest.Mocked<PondUserDao> = {
   getPondUser: jest.fn(),
   insertPondUser: jest.fn(),
   updatePondUser: jest.fn(),
-  incrementPondUserExp: jest.fn()
+  incrementPondUserExp: jest.fn(),
+  getTopPondUsers: jest.fn()
 };
 
 const mockFishDao: jest.Mocked<FishDao> = {
@@ -38,13 +37,19 @@ describe(' Test getPondUser', () => {
   });
 });
 
+describe(' Test getTopPondUsers', () => {
+  it('user id exists', async () => {
+    mockPondUserDao.getTopPondUsers.mockResolvedValueOnce([mockUser]);
+    const results = await pondUserService.getTopPondUsers('exp', 'desc', 1);
+    expect(results).toStrictEqual([mockUser]);
+  });
+});
+
 describe('Test getOrCreatePondUser', () => {
   it('user id exists', async () => {
     const expectedUser = {
       id: 123,
       username: 'test-user',
-      email: 'test@example.com',
-      googleId: 'my-google-id',
       exp: 1,
       location: 'default'
     };
@@ -59,8 +64,6 @@ describe('Test getOrCreatePondUser', () => {
     const expectedUser = {
       id: 123,
       username: 'test-user',
-      email: 'test@example.com',
-      googleId: 'my-google-id',
       exp: 1,
       location: 'default'
     };

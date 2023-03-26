@@ -37,8 +37,6 @@ class PondUserService {
     const pondUser: PondUser = {
       id: result.id,
       username: result.username,
-      email: result.email,
-      googleId: result.google_id,
       exp: result.exp,
       location: result.location
     };
@@ -56,6 +54,11 @@ class PondUserService {
     return result;
   }
 
+  /**
+   * Gets all of a user's fish
+   * @param id
+   * @returns List of fish
+   */
   async getUserFish(id: number): Promise<UserFish[]> {
     const result = await this.fishDao.getFish({ pond_user_id: id });
     const userFishArr = result.map((element: any) => {
@@ -70,8 +73,26 @@ class PondUserService {
     return userFishArr;
   }
 
+  /**
+   * Updates the user's location
+   * @param id user's id
+   * @param pond pond location
+   * @returns the updated user
+   */
   async updateUserLocation(id: number, pond: string): Promise<PondUser> {
     const result = await this.pondUserDao.updatePondUser({ id }, { location: pond });
+    return result;
+  }
+
+  /**
+   * Returns the top users based on a column
+   * @param column
+   * @param order
+   * @param limit
+   * @returns list of pond users
+   */
+  async getTopPondUsers(column: string, order: 'asc' | 'desc', limit: number): Promise<PondUser[]> {
+    const result = await this.pondUserDao.getTopPondUsers(column, order, limit);
     return result;
   }
 }

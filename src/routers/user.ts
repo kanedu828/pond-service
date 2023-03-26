@@ -19,6 +19,10 @@ const getUserRouter = (pondUserController: PondUserController) => {
     await pondUserController.updateUserLocation(req, res);
   });
 
+  router.get('/leaderboard', async (req: Request, res: Response) => {
+    await pondUserController.getTopHundredPondUsersByExp(req, res);
+  });
+
   return router;
 };
 

@@ -7,8 +7,6 @@ import FishDao from '../dao/fishDao';
 const mockUser = {
   id: 1,
   username: 'test-user',
-  email: 'test@example.com',
-  googleId: 'my-google-id',
   exp: 1,
   location: 'Pond'
 };
@@ -20,7 +18,8 @@ const mockPondUserDao: jest.Mocked<PondUserDao> = {
   getPondUser: jest.fn().mockResolvedValue(mockUser),
   insertPondUser: jest.fn(),
   updatePondUser: jest.fn(),
-  incrementPondUserExp: jest.fn()
+  incrementPondUserExp: jest.fn(),
+  getTopPondUsers: jest.fn()
 };
 
 jest.mock('../dao/fishDao');
@@ -115,8 +114,6 @@ describe('Test getFish', () => {
     mockPondUserDao.getPondUser = jest.fn().mockResolvedValueOnce({
       id: 1,
       username: 'test-user',
-      email: 'test@example.com',
-      googleId: 'my-google-id',
       exp: 1,
       location: 'asdfasdf'
     });

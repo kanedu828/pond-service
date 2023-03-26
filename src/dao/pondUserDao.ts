@@ -7,7 +7,7 @@ interface PondUserColumns {
   location?: string;
 }
 
-const allColumns = ['id', 'email', 'google_id', 'username', 'exp', 'location'];
+const defaultReturnColumns = ['id', 'username', 'exp', 'location'];
 
 class PondUserDao {
   // Knex db instance
@@ -18,17 +18,28 @@ class PondUserDao {
   }
 
   async getPondUser(key: PondUserColumns) {
-    const pondUser = await this.db('pond_user').where(key).first();
+    const pondUser = await this.db('pond_user').select(defaultReturnColumns).where(key).first();
     return pondUser;
   }
 
+  async getTopPondUsers(column: string, order: 'asc' | 'desc', limit: number) {
+    const pondUsers = await this.db('pond_user')
+      .select(defaultReturnColumns)
+      .orderBy(column, order)
+      .limit(limit);
+    return pondUsers;
+  }
+
   async insertPondUser(columns: PondUserColumns) {
-    const pondUser = await this.db('pond_user').returning(allColumns).insert(columns);
+    const pondUser = await this.db('pond_user').returning(defaultReturnColumns).insert(columns);
     return pondUser[0];
   }
 
   async updatePondUser(key: PondUserColumns, columns: PondUserColumns) {
-    const pondUser = await this.db('pond_user').returning(allColumns).where(key).update(columns);
+    const pondUser = await this.db('pond_user')
+      .returning(defaultReturnColumns)
+      .where(key)
+      .update(columns);
     return pondUser[0];
   }
 
@@ -38,7 +49,7 @@ class PondUserDao {
         id
       })
       .increment('exp', inc)
-      .returning(allColumns);
+      .returning(defaultReturnColumns);
     return pondUser[0];
   }
 }
